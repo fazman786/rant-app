@@ -18,10 +18,11 @@ const CATS = [
 const NON_ALL_CATS = CATS.slice(1);
 
 const TABS = [
-  { id:"feed",          icon:"🔥", label:"FEED"   },
-  { id:"trending",      icon:"📈", label:"HOT"    },
-  { id:"notifications", icon:"🔔", label:"ALERTS" },
-  { id:"profile",       icon:"👤", label:"ME"     },
+  { id:"feed",          icon:"🔥", label:"FEED"      },
+  { id:"following",     icon:"👥", label:"FOLLOWING"  },
+  { id:"trending",      icon:"📈", label:"HOT"        },
+  { id:"notifications", icon:"🔔", label:"ALERTS"    },
+  { id:"profile",       icon:"👤", label:"ME"         },
 ];
 
 const REACTIONS = [
@@ -120,7 +121,147 @@ async function getAIValidation(rantText, category) {
   } catch { return null; }
 }
 
+// ─── AI CATEGORY DETECTOR ─────────────────────────────────────────────────────
+async function detectCategory(rantText) {
+  if(!rantText||rantText.length<10) return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`Classify this rant into exactly one category. Reply with ONLY the category id, nothing else.\nCategories: work, people, life, tech, traffic, other\nRant: "${rantText}"\nCategory:`}],
+      }),
+    });
+    const data = await res.json();
+    const cat = data.content?.map(b=>b.type==="text"?b.text:"").join("").trim().toLowerCase();
+    const valid = ["work","people","life","tech","traffic","other"];
+    return valid.includes(cat) ? cat : null;
+  } catch { return null; }
+}
+
+// ─── AI HEAT PREDICTOR ────────────────────────────────────────────────────────
+async function predictHeat(rantText) {
+  if(!rantText||rantText.length<20) return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`You are THE VOID, an AI in a ranting app. Rate this rant's viral potential from 1-10 and give ONE specific reason why in max 12 words. Format: exactly "X/10 — reason" with nothing else.\nRant: "${rantText}"`}],
+      }),
+    });
+    const data = await res.json();
+    return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
+  } catch { return null; }
+}
+
+// ─── AI RANT SUMMARISER ───────────────────────────────────────────────────────
+async function summariseThread(rant) {
+  const replies = (rant.replies||[]).map(r=>r.text||"🎙 voice rant").join(" | ");
+  const threadText = `Original: "${rant.text||"🎙 voice rant"}" — Replies: ${replies||"none"}`;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`You are THE VOID. Summarise this rant thread in ONE darkly funny sentence (max 20 words). Be savage but accurate. No emojis. Thread: ${threadText}`}],
+      }),
+    });
+    const data = await res.json();
+    return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
+  } catch { return null; }
+}
+
+// ─── AI TRENDING INSIGHTS ─────────────────────────────────────────────────────
+async function getTrendingInsight(rants) {
+  const topRants = rants.slice(0,10).map(r=>r.text||"voice rant").join(" | ");
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`You are THE VOID. Based on these top rants today, write a darkly funny 2-sentence summary of what humanity is angry about right now. Be specific and savage. No emojis. Rants: ${topRants}`}],
+      }),
+    });
+    const data = await res.json();
+    return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
+  } catch { return null; }
+}
+
+// ─── AI WEEKLY WRAPPED SUMMARY ────────────────────────────────────────────────
+async function getWrappedSummary(username, rants, streak) {
+  const topRant = rants.sort((a,b)=>b.heat-a.heat)[0];
+  const cats = rants.map(r=>r.category);
+  const topCat = cats.sort((a,b)=>cats.filter(c=>c===b).length-cats.filter(c=>c===a).length)[0]||"life";
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`You are THE VOID. Write a personalised 3-sentence Rant Wrapped summary for @${username}. Facts: ${rants.length} rants this period, mostly about ${topCat}, ${streak} day streak, top rant: "${topRant?.text?.slice(0,80)||"voice rant"}" with ${topRant?.heat||0} heat. Be darkly funny, specific, and make them feel like a legend. No emojis.`}],
+      }),
+    });
+    const data = await res.json();
+    return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
+  } catch { return null; }
+}
+
+// ─── AI VOID REPLY (occasional thread reply) ──────────────────────────────────
+async function getVoidReply(replyText, originalRant) {
+  // Only fires 30% of the time to keep it special
+  if(Math.random()>0.3) return null;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:`You are THE VOID dropping into a rant thread. Original rant: "${originalRant?.text||"voice rant"}". Someone replied: "${replyText}". Drop a single punchy one-liner reaction (max 12 words). Be darkly funny. No emojis. Never start with "I".`}],
+      }),
+    });
+    const data = await res.json();
+    return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
+  } catch { return null; }
+}
+
 // ─── DB HELPERS ───────────────────────────────────────────────────────────────
+async function fetchFollowing(userId) {
+  const {data} = await sb.from("follows").select("following_id").eq("follower_id",userId);
+  return (data||[]).map(f=>f.following_id);
+}
+
+async function followUser(followerId, followingId) {
+  await sb.from("follows").insert({follower_id:followerId, following_id:followingId});
+}
+
+async function unfollowUser(followerId, followingId) {
+  await sb.from("follows").delete().eq("follower_id",followerId).eq("following_id",followingId);
+}
+
+async function fetchSuggestedRanters(currentUserId, followingIds, rants) {
+  // Find top ranters by heat that user isn't already following
+  const authorMap = {};
+  rants.forEach(r=>{
+    if(r.author_id&&r.author_id!==currentUserId&&!followingIds.includes(r.author_id)){
+      if(!authorMap[r.author_id]) authorMap[r.author_id]={id:r.author_id,username:r.author,heat:0,rants:0};
+      authorMap[r.author_id].heat+=r.heat;
+      authorMap[r.author_id].rants+=1;
+    }
+  });
+  return Object.values(authorMap).sort((a,b)=>b.heat-a.heat).slice(0,5);
+}
+
 async function fetchRants(catFilter="all") {
   let q = sb.from("rants")
     .select(`*, profiles(username,is_pass), reactions(user_id,type), replies:rants!parent_id(*, profiles(username,is_pass), reactions(user_id,type))`)
@@ -183,6 +324,56 @@ function normalizeRant(r, currentUserId) {
     audioBars: r.audio_bars||randBars(),
     audioUrl: r.audio_url,
   };
+}
+
+// ─── AI TRENDING INSIGHTS BANNER ─────────────────────────────────────────────
+function TrendingInsightBanner({rants}) {
+  const [insight,setInsight] = useState(null);
+  const [loading,setLoading] = useState(true);
+  const cacheKey = `trending_insight_${new Date().toDateString()}`;
+  useEffect(()=>{
+    const cached = LS.get(cacheKey);
+    if(cached){setInsight(cached);setLoading(false);return;}
+    if(rants.length>0){
+      getTrendingInsight(rants).then(v=>{
+        if(v){setInsight(v);LS.set(cacheKey,v);}
+        setLoading(false);
+      });
+    } else setLoading(false);
+  },[rants.length]);
+  return(
+    <div className="insight-banner">
+      <div className="insight-header">
+        <span className="insight-eye">👁</span>
+        <div><p className="insight-title">THE VOID OBSERVES</p><p className="insight-sub">what humanity is angry about today</p></div>
+      </div>
+      {loading
+        ?<div className="void-typing" style={{padding:"4px 0"}}><span className="typing-dot" style={{"--d":"0s"}}/><span className="typing-dot" style={{"--d":".2s"}}/><span className="typing-dot" style={{"--d":".4s"}}/></div>
+        :<p className="insight-text">{insight||"The void is watching. Keep ranting."}</p>}
+    </div>
+  );
+}
+
+// ─── THREAD SUMMARISER ────────────────────────────────────────────────────────
+function ThreadSummariser({rant}) {
+  const [summary,setSummary] = useState(null);
+  const [loading,setLoading] = useState(false);
+  const [shown,setShown] = useState(false);
+  if(!rant.replies||rant.replies.length<2) return null;
+  const fetch = async()=>{
+    setLoading(true);setShown(true);
+    const s = await summariseThread(rant);
+    setSummary(s);setLoading(false);
+  };
+  return(
+    <div className="thread-summariser">
+      {!shown
+        ?<button className="summarise-btn" onClick={fetch}>👁 SUMMARISE THE VOID ({rant.replies.length} replies)</button>
+        :loading
+          ?<div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 0"}}><span style={{fontSize:16}}>👁</span><div className="void-typing"><span className="typing-dot" style={{"--d":"0s"}}/><span className="typing-dot" style={{"--d":".2s"}}/><span className="typing-dot" style={{"--d":".4s"}}/></div></div>
+          :<div className="summary-result"><span style={{fontSize:14}}>👁</span><p className="summary-text">{summary||"The void refuses to summarise this chaos."}</p></div>}
+    </div>
+  );
 }
 
 // ─── RANT OF THE DAY ──────────────────────────────────────────────────────────
@@ -377,8 +568,83 @@ function VoiceRecorder({onComplete,limit}){
   );
 }
 
+// ─── FOLLOW BUTTON ────────────────────────────────────────────────────────────
+function FollowButton({targetId, targetUsername, currentUserId, followingIds, onFollow, onUnfollow, small=false}) {
+  if(!currentUserId||targetId===currentUserId) return null;
+  const isFollowing = followingIds.includes(targetId);
+  return(
+    <button
+      className={`follow-btn${isFollowing?" follow-btn-on":""}${small?" follow-btn-sm":""}`}
+      onClick={e=>{e.stopPropagation();isFollowing?onUnfollow(targetId,targetUsername):onFollow(targetId,targetUsername);}}
+    >
+      {isFollowing?"✓ FOLLOWING":"+ FOLLOW"}
+    </button>
+  );
+}
+
+// ─── SUGGESTED RANTERS ────────────────────────────────────────────────────────
+function SuggestedRanters({suggestions, currentUserId, followingIds, onFollow}) {
+  if(!suggestions||suggestions.length===0) return null;
+  return(
+    <div className="suggested-card">
+      <p className="suggested-title">👥 RANTERS YOU MIGHT LIKE</p>
+      <div className="suggested-list">
+        {suggestions.map(s=>(
+          <div key={s.id} className="suggested-row">
+            <div className="suggested-avatar">{s.username.slice(0,2).toUpperCase()}</div>
+            <div className="suggested-info">
+              <p className="suggested-username">@{s.username}</p>
+              <p className="suggested-stats">🔥 {s.heat.toLocaleString()} heat · {s.rants} rant{s.rants!==1?"s":""}</p>
+            </div>
+            <FollowButton targetId={s.id} targetUsername={s.username} currentUserId={currentUserId} followingIds={followingIds} onFollow={onFollow} onUnfollow={()=>{}} small/>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── FOLLOWING FEED ───────────────────────────────────────────────────────────
+function FollowingFeed({rants, followingIds, currentUserId, currentUsername, isPass, onFollow, onUnfollow, followingIdsSet, ...cardProps}) {
+  const followingRants = useMemo(()=>
+    rants.filter(r=>followingIds.includes(r.author_id)&&!r.reported)
+      .slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)),
+  [rants,followingIds]);
+
+  if(followingIds.length===0) return(
+    <div className="screen-pad">
+      <div className="following-empty">
+        <span style={{fontSize:48}}>👥</span>
+        <p className="empty-txt">YOU'RE NOT FOLLOWING ANYONE</p>
+        <p style={{color:"var(--dim)",fontSize:12,marginTop:6,textAlign:"center",lineHeight:1.6}}>Follow ranters from the feed to see their rants here. Look for the + FOLLOW button on any rant.</p>
+      </div>
+    </div>
+  );
+
+  if(followingRants.length===0) return(
+    <div className="screen-pad">
+      <div className="following-empty">
+        <span style={{fontSize:48}}>🔔</span>
+        <p className="empty-txt">NOTHING NEW YET</p>
+        <p style={{color:"var(--dim)",fontSize:12,marginTop:6}}>the people you follow haven't ranted recently</p>
+      </div>
+    </div>
+  );
+
+  return(
+    <div className="feed">
+      <div className="following-header">
+        <p className="following-header-txt">👥 {followingIds.length} ranter{followingIds.length!==1?"s":""} you follow</p>
+      </div>
+      {followingRants.map(r=>(
+        <RantCard key={r.id} rant={r} currentUserId={currentUserId} currentUsername={currentUsername} isPass={isPass} {...cardProps}/>
+      ))}
+    </div>
+  );
+}
+
 // ─── RANT CARD ────────────────────────────────────────────────────────────────
-function RantCard({rant,onReact,onBoost,onReply,onReport,onShare,currentUserId,currentUsername,isPass,depth=0}){
+function RantCard({rant,onReact,onBoost,onReply,onReport,onShare,onFollow,onUnfollow,currentUserId,currentUsername,isPass,followingIds=[],depth=0}){
   const cat=CATS.find(c=>c.id===rant.category);
   const isOwn=rant.author_id===currentUserId;
   const canBoost=isPass&&isOwn&&!rant.boosted;
@@ -412,6 +678,15 @@ function RantCard({rant,onReact,onBoost,onReply,onReport,onShare,currentUserId,c
         </div>
       </div>
 
+      {/* AUTHOR ROW */}
+      {depth===0&&!isOwn&&rant.author&&(
+        <div className="author-row">
+          <div className="author-avatar-sm">{rant.author.slice(0,2).toUpperCase()}</div>
+          <span className="author-name">@{rant.author}</span>
+          <FollowButton targetId={rant.author_id} targetUsername={rant.author} currentUserId={currentUserId} followingIds={followingIds} onFollow={onFollow} onUnfollow={onUnfollow} small/>
+        </div>
+      )}
+
       {rant.type==="voice"
         ?<VoicePlayer bars={rant.audioBars} duration={rant.duration} audioUrl={rant.audioUrl}/>
         :<p className="card-text">{rant.text}</p>}
@@ -438,6 +713,7 @@ function RantCard({rant,onReact,onBoost,onReply,onReport,onShare,currentUserId,c
       {depth===0&&rant.replies?.length>0&&(
         <>
           <button className="show-replies-btn" onClick={()=>setShowReplies(r=>!r)}>{showReplies?"▲ hide":"▼"} {rant.replies.length} rant back{rant.replies.length>1?"s":""}</button>
+          <ThreadSummariser rant={rant}/>
           {showReplies&&<div className="reply-chain">{rant.replies.map(r=><RantCard key={r.id} rant={normalizeRant(r,currentUserId)} onReact={onReact} onBoost={onBoost} onReply={onReply} onReport={onReport} onShare={onShare} currentUserId={currentUserId} currentUsername={currentUsername} isPass={isPass} depth={1}/>)}</div>}
         </>
       )}
@@ -491,14 +767,39 @@ function ComposeSheet({onClose,onPost,profile,onOpenPass,replyingTo,prefillText}
   const [text,setText]=useState(prefillText||"");
   const [cat,setCat]=useState("life");
   const [voiceData,setVoiceData]=useState(null);
+  const [heatScore,setHeatScore]=useState(null);
+  const [heatLoading,setHeatLoading]=useState(false);
+  const [aiCat,setAiCat]=useState(null);
   const ref=useRef(null);
   const charsLeft=MAX_CHARS-text.length;
   const limit=profile?.is_pass?PASS_VOICE_LIMIT:FREE_VOICE_LIMIT;
   const isFlip=isFlipTheVoidDay();
+  const heatTimer=useRef(null);
+
   useEffect(()=>{if(mode==="text"&&ref.current)ref.current.focus();},[mode]);
+
+  // auto-detect category as user types
+  useEffect(()=>{
+    if(text.length<30) return;
+    clearTimeout(heatTimer.current);
+    heatTimer.current=setTimeout(async()=>{
+      const detectedCat = await detectCategory(text);
+      if(detectedCat) setAiCat(detectedCat);
+    },1500);
+    return()=>clearTimeout(heatTimer.current);
+  },[text]);
+
+  const handlePredictHeat = async()=>{
+    if(!text.trim()||heatLoading) return;
+    setHeatLoading(true);
+    const score = await predictHeat(text);
+    setHeatScore(score);
+    setHeatLoading(false);
+  };
   const submit=()=>{
-    if(voiceData)onPost({type:"voice",...voiceData,category:replyingTo?.category||cat,is_prompt:!!prefillText});
-    else if(text.trim()&&charsLeft>=0)onPost({type:"text",text:text.trim(),category:replyingTo?.category||cat,is_prompt:!!prefillText});
+    const finalCat = aiCat||cat;
+    if(voiceData)onPost({type:"voice",...voiceData,category:replyingTo?.category||finalCat,is_prompt:!!prefillText});
+    else if(text.trim()&&charsLeft>=0)onPost({type:"text",text:text.trim(),category:replyingTo?.category||finalCat,is_prompt:!!prefillText});
   };
   return(
     <div className="overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -514,13 +815,22 @@ function ComposeSheet({onClose,onPost,profile,onOpenPass,replyingTo,prefillText}
           <button className={`mode-btn${mode==="text"?" m-on":""}`} onClick={()=>setMode("text")}>✍️ TYPE</button>
           <button className={`mode-btn${mode==="voice"?" m-on":""}`} onClick={()=>setMode("voice")}>🎙 VOICE {!profile?.is_pass&&<span style={{fontSize:9,opacity:.6}}>· 1 MIN FREE</span>}</button>
         </div>
-        {!replyingTo&&<div className="cat-picker">{NON_ALL_CATS.map(c=><button key={c.id} className={`cat-btn${cat===c.id?" cat-on":""}`} onClick={()=>setCat(c.id)}>{c.emoji} {c.label}</button>)}</div>}
+        {!replyingTo&&(
+          <div>
+            <div className="cat-picker">{NON_ALL_CATS.map(c=><button key={c.id} className={`cat-btn${(aiCat||cat)===c.id?" cat-on":""}`} onClick={()=>{setCat(c.id);setAiCat(null);}}>{c.emoji} {c.label}</button>)}</div>
+            {aiCat&&<p className="ai-cat-hint">👁 void detected: <strong>{CATS.find(c=>c.id===aiCat)?.emoji} {CATS.find(c=>c.id===aiCat)?.label}</strong> <button onClick={()=>setAiCat(null)} style={{background:"none",border:"none",color:"var(--dim)",cursor:"pointer",fontSize:11}}>× change</button></p>}
+          </div>
+        )}
         {mode==="text"?(
           <>
             <textarea ref={ref} className="rant-input" placeholder={isFlip?"say something kind, anonymously...":replyingTo?"respond with your own rant...":"what's got you fuming? don't hold back..."} value={text} onChange={e=>setText(e.target.value)} maxLength={MAX_CHARS+50}/>
+            {heatScore&&<div className="heat-score"><span className="heat-score-icon">🔥</span><span className="heat-score-text">{heatScore}</span></div>}
             <div className="compose-footer">
               <span className={`char-count${charsLeft<=30&&charsLeft>0?" warn":""}${charsLeft<0?" over":""}`}>{charsLeft}</span>
-              <button className="post-btn" onClick={submit} disabled={!text.trim()||charsLeft<0}>RELEASE</button>
+              <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                {text.length>20&&<button className="predict-btn" onClick={handlePredictHeat} disabled={heatLoading}>{heatLoading?"…":"🔥 PREDICT"}</button>}
+                <button className="post-btn" onClick={submit} disabled={!text.trim()||charsLeft<0}>RELEASE</button>
+              </div>
             </div>
           </>
         ):(
@@ -637,6 +947,7 @@ function TrendingScreen({rants,...cardProps}){
   const catStats=useMemo(()=>NON_ALL_CATS.map(c=>({...c,count:rants.filter(r=>r.category===c.id).length,heat:rants.filter(r=>r.category===c.id).reduce((s,r)=>s+r.heat,0)})).sort((a,b)=>b.heat-a.heat),[rants]);
   return(
     <div className="screen-pad">
+      <TrendingInsightBanner rants={rants}/>
       <p className="section-title">🌋 TRENDING NOW</p><p className="section-sub">ranked by heat per minute</p>
       {trending.map((r,i)=><div key={r.id}><div className="trend-rank">#{i+1}</div><RantCard rant={r} {...cardProps} depth={0}/></div>)}
       <p className="section-title" style={{marginTop:24}}>🌡 CATEGORY HEAT</p>
@@ -670,7 +981,15 @@ function ProfileScreen({profile,myRants,onOpenPass,onLogout}){
   const heat=myRants.reduce((s,r)=>s+r.heat,0);
   const voices=myRants.filter(r=>r.type==="voice").length;
   const coins=getCoins(profile.username||"");
-  const stats=[{val:myRants.length,lbl:"RANTS"},{val:voices,lbl:"VOICE"},{val:heat.toLocaleString(),lbl:"🔥 HEAT"},{val:profile.streak||0,lbl:"🔥 STREAK"},{val:coins,lbl:"🪙 COINS"},{val:myRants.filter(r=>r.boosted).length,lbl:"⚡ BOOSTS"}];
+  const [wrappedSummary,setWrappedSummary]=useState(null);
+  const [wrappedLoading,setWrappedLoading]=useState(false);
+  const stats=[{val:myRants.length,lbl:"RANTS"},{val:voices,lbl:"VOICE"},{val:heat.toLocaleString(),lbl:"🔥 HEAT"},{val:profile.streak||0,lbl:"🔥 STREAK"},{val:profile.follower_count||0,lbl:"👥 FOLLOWERS"},{val:profile.following_count||0,lbl:"FOLLOWING"}];
+
+  const fetchWrapped=async()=>{
+    setWrappedLoading(true);
+    const s=await getWrappedSummary(profile.username,myRants,profile.streak||0);
+    setWrappedSummary(s);setWrappedLoading(false);
+  };
   return(
     <div className="screen-pad">
       <div className="profile-header">
@@ -682,6 +1001,23 @@ function ProfileScreen({profile,myRants,onOpenPass,onLogout}){
       </div>
       <StreakBadge streak={profile.streak}/>
       <div className="stats-grid">{stats.map((s,i)=><div key={i} className="stat-box"><span className="stat-val">{s.val}</span><span className="stat-lbl">{s.lbl}</span></div>)}</div>
+
+      {/* AI WRAPPED SUMMARY */}
+      {myRants.length>0&&(
+        <div className="wrapped-ai-card">
+          {!wrappedSummary&&!wrappedLoading&&(
+            <button className="wrapped-ai-btn" onClick={fetchWrapped}>👁 GET MY VOID WRAPPED SUMMARY</button>
+          )}
+          {wrappedLoading&&<div style={{display:"flex",alignItems:"center",gap:10,padding:"4px 0"}}><span style={{fontSize:18}}>👁</span><div className="void-typing"><span className="typing-dot" style={{"--d":"0s"}}/><span className="typing-dot" style={{"--d":".2s"}}/><span className="typing-dot" style={{"--d":".4s"}}/></div></div>}
+          {wrappedSummary&&(
+            <div>
+              <p className="wrapped-ai-label">👁 THE VOID ON YOUR RANT HISTORY</p>
+              <p className="wrapped-ai-text">{wrappedSummary}</p>
+            </div>
+          )}
+        </div>
+      )}
+
       {!profile.is_pass?(
         <button className="pass-upsell-card" onClick={onOpenPass}>
           <span style={{fontSize:22,color:"var(--gold)"}}>✦</span>
@@ -774,6 +1110,99 @@ function AuthScreen({onAuth}){
   );
 }
 
+// ─── SEARCH ───────────────────────────────────────────────────────────────────
+async function searchRants(query) {
+  if(!query||query.length<2) return [];
+  const {data} = await sb.from("rants")
+    .select("*, profiles(username,is_pass), reactions(user_id,type)")
+    .ilike("text", `%${query}%`)
+    .eq("reported", false)
+    .is("parent_id", null)
+    .order("heat", {ascending:false})
+    .limit(20);
+  return data||[];
+}
+
+async function searchPeople(query) {
+  if(!query||query.length<2) return [];
+  const {data} = await sb.from("profiles")
+    .select("*")
+    .ilike("username", `%${query}%`)
+    .limit(20);
+  return data||[];
+}
+
+function SearchScreen({onClose, currentUserId, currentUsername, isPass, followingIds, onFollow, onUnfollow, onReact, onShare, onReport, onBoost}) {
+  const [query, setQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("rants");
+  const [rantResults, setRantResults] = useState([]);
+  const [peopleResults, setPeopleResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const debounceRef = useRef(null);
+  const inputRef = useRef(null);
+
+  useEffect(()=>{if(inputRef.current)inputRef.current.focus();},[]);
+
+  useEffect(()=>{
+    clearTimeout(debounceRef.current);
+    if(query.length<2){setRantResults([]);setPeopleResults([]);return;}
+    debounceRef.current=setTimeout(async()=>{
+      setLoading(true);
+      const [rants,people]=await Promise.all([searchRants(query),searchPeople(query)]);
+      setRantResults(rants.map(r=>normalizeRant(r,currentUserId)));
+      setPeopleResults(people);
+      setLoading(false);
+    },500);
+    return()=>clearTimeout(debounceRef.current);
+  },[query]);
+
+  const cardProps={onReact,onBoost,onReply:()=>{},onReport,onShare,onFollow,onUnfollow,currentUserId,currentUsername,isPass,followingIds};
+
+  return(
+    <div className="search-screen">
+      <div className="search-header">
+        <div className="search-input-wrap">
+          <span className="search-icon-inner">🔍</span>
+          <input ref={inputRef} className="search-input" placeholder="search rants and people..." value={query} onChange={e=>setQuery(e.target.value)} autoCapitalize="none" autoCorrect="off"/>
+          {query&&<button className="search-clear" onClick={()=>setQuery("")}>×</button>}
+        </div>
+        <button className="search-cancel" onClick={onClose}>CANCEL</button>
+      </div>
+      <div className="search-tabs">
+        <button className={`search-tab${activeTab==="rants"?" search-tab-on":""}`} onClick={()=>setActiveTab("rants")}>🔥 RANTS</button>
+        <button className={`search-tab${activeTab==="people"?" search-tab-on":""}`} onClick={()=>setActiveTab("people")}>👥 PEOPLE</button>
+      </div>
+      <div className="search-results">
+        {loading&&<div style={{textAlign:"center",padding:"40px 0",color:"var(--muted)",fontFamily:"var(--display)",letterSpacing:2}}>SEARCHING THE VOID…</div>}
+        {!loading&&query.length>=2&&activeTab==="rants"&&(
+          rantResults.length===0
+            ?<div className="search-empty"><span style={{fontSize:40}}>👁</span><p className="empty-txt">THE VOID HAS NOTHING ON THIS</p></div>
+            :<div style={{display:"flex",flexDirection:"column",gap:10}}>{rantResults.map(r=><RantCard key={r.id} rant={r} {...cardProps} depth={0}/>)}</div>
+        )}
+        {!loading&&query.length>=2&&activeTab==="people"&&(
+          peopleResults.length===0
+            ?<div className="search-empty"><span style={{fontSize:40}}>👁</span><p className="empty-txt">THE VOID HAS NOTHING ON THIS</p></div>
+            :<div style={{display:"flex",flexDirection:"column",gap:8}}>
+              {peopleResults.map(p=>(
+                <div key={p.id} className="people-result">
+                  <div className="people-avatar">{p.username.slice(0,2).toUpperCase()}</div>
+                  <div className="people-info">
+                    <p className="people-username">@{p.username}</p>
+                    <p className="people-meta">{p.follower_count||0} followers · {p.is_pass?"✦ Pass":""}</p>
+                  </div>
+                  <FollowButton targetId={p.id} targetUsername={p.username} currentUserId={currentUserId} followingIds={followingIds} onFollow={onFollow} onUnfollow={onUnfollow} small/>
+                </div>
+              ))}
+            </div>
+        )}
+        {!loading&&query.length<2&&(
+          <div className="search-hint"><span style={{fontSize:40}}>🔍</span><p style={{color:"var(--muted)",fontFamily:"var(--display)",fontSize:13,letterSpacing:2,marginTop:12}}>TYPE TO SEARCH</p><p style={{color:"var(--dim)",fontSize:11,marginTop:6}}>search rants by content or find people by username</p></div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function SheetHandle(){return<div style={{width:36,height:4,background:"var(--bd)",borderRadius:2,margin:"0 auto 18px",flexShrink:0}}/>;}
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
@@ -788,6 +1217,9 @@ export default function App(){
   const unread=useMemo(()=>notifs.filter(n=>n.unread).length,[notifs]);
 
   const [tab,setTab]=useState("feed");
+  const [showSearch,setShowSearch]=useState(false);
+  const [followingIds,setFollowingIds]=useState([]);
+  const [suggestions,setSuggestions]=useState([]);
   const [catFilter,setCatFilter]=useState("all");
   const [showCompose,setShowCompose]=useState(false);
   const [replyingTo,setReplyingTo]=useState(null);
@@ -821,6 +1253,20 @@ export default function App(){
   },[catFilter,authUser?.id]);
 
   useEffect(()=>{if(authed)loadRants();},[authed,catFilter]);
+
+  // load follows
+  useEffect(()=>{
+    if(!authUser?.id) return;
+    fetchFollowing(authUser.id).then(ids=>{
+      setFollowingIds(ids);
+    });
+  },[authUser?.id]);
+
+  // update suggestions when rants or followingIds change
+  useEffect(()=>{
+    if(!authUser?.id||rants.length===0) return;
+    fetchSuggestedRanters(authUser.id, followingIds, rants).then(setSuggestions);
+  },[rants.length, followingIds.length, authUser?.id]);
 
   // real-time
   useEffect(()=>{
@@ -921,6 +1367,20 @@ export default function App(){
     }
   },[authUser,profile]);
 
+  const handleFollow=useCallback(async(targetId,targetUsername)=>{
+    if(!authUser) return;
+    setFollowingIds(prev=>[...prev,targetId]);
+    await followUser(authUser.id, targetId);
+    await pushNotification(targetId,"👥",`@${profile?.username} started following you!`);
+    await pushNotification(authUser.id,"👥",`You're now following @${targetUsername}`);
+  },[authUser,profile]);
+
+  const handleUnfollow=useCallback(async(targetId,targetUsername)=>{
+    if(!authUser) return;
+    setFollowingIds(prev=>prev.filter(id=>id!==targetId));
+    await unfollowUser(authUser.id, targetId);
+  },[authUser]);
+
   const confirmBoost=useCallback(async()=>{
     if(!profile)return;
     if(!profile.is_pass){
@@ -949,7 +1409,7 @@ export default function App(){
   const myRants=useMemo(()=>rants.filter(r=>r.author_id===authUser?.id),[rants,authUser]);
   const filtered=useMemo(()=>rants.slice().sort((a,b)=>(b.boosted?1:0)-(a.boosted?1:0)||new Date(b.created_at)-new Date(a.created_at)),[rants]);
 
-  const cardProps={onReact:handleReact,onBoost:setBoostTarget,onReply:r=>{setReplyingTo(r);setPrefillText("");setShowCompose(true);},onReport:setReportTarget,onShare:setShareTarget,currentUserId:authUser?.id,currentUsername:profile?.username,isPass:profile?.is_pass||false};
+  const cardProps={onReact:handleReact,onBoost:setBoostTarget,onReply:r=>{setReplyingTo(r);setPrefillText("");setShowCompose(true);},onReport:setReportTarget,onShare:setShareTarget,onFollow:handleFollow,onUnfollow:handleUnfollow,currentUserId:authUser?.id,currentUsername:profile?.username,isPass:profile?.is_pass||false,followingIds};
 
   if(loading)return<><CSS/><div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)"}}><div style={{fontFamily:"var(--display)",fontSize:60,background:"linear-gradient(135deg,#ff3b1f,#ff8c00)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>RANT</div></div></>;
   if(!authed)return<><CSS/><AuthScreen onAuth={handleAuth}/></>;
@@ -965,6 +1425,7 @@ export default function App(){
             <div style={{display:"flex",alignItems:"center",gap:8}}>
               {(profile?.streak||0)>1&&<div className="header-streak">🔥 {profile.streak}</div>}
               <CoinBadge username={profile?.username||""}/>
+              <button className="search-icon-btn" onClick={()=>setShowSearch(true)}>🔍</button>
             </div>
           </div>
           {tab==="feed"&&(
@@ -979,11 +1440,13 @@ export default function App(){
             <div className="feed">
               <DailyPrompt onRantAboutIt={t=>{setPrefillText(t);setReplyingTo(null);setShowCompose(true);}} isFlip={isFlip}/>
               <RantOfTheDay rant={rantOfTheDay} onShare={setShareTarget} currentUserId={authUser?.id}/>
+              <SuggestedRanters suggestions={suggestions} currentUserId={authUser?.id} followingIds={followingIds} onFollow={handleFollow}/>
               {rantsLoading?<div style={{textAlign:"center",padding:"40px 0",color:"var(--muted)",fontFamily:"var(--display)",letterSpacing:2}}>LOADING THE VOID…</div>
                 :filtered.length===0?<div className="empty-state"><span style={{fontSize:48}}>😶</span><p className="empty-txt">NOTHING HERE YET</p><p style={{color:"var(--dim)",fontSize:12,marginTop:4}}>be the first to rant</p></div>
                 :filtered.map(r=><RantCard key={r.id} rant={r} {...cardProps}/>)}
             </div>
           )}
+          {tab==="following"&&<FollowingFeed rants={rants} followingIds={followingIds} currentUserId={authUser?.id} currentUsername={profile?.username} isPass={profile?.is_pass||false} onFollow={handleFollow} onUnfollow={handleUnfollow} {...cardProps}/>}
           {tab==="trending"&&<TrendingScreen rants={rants} {...cardProps}/>}
           {tab==="notifications"&&<NotificationsScreen notifs={notifs} onClear={async()=>{await sb.from("notifications").delete().eq("user_id",authUser.id);setNotifs([]);}}/>}
           {tab==="profile"&&<ProfileScreen profile={profile} myRants={myRants} onOpenPass={()=>setShowPass(true)} onLogout={handleLogout}/>}
@@ -1002,6 +1465,7 @@ export default function App(){
         </nav>
 
         {showCompose&&<ComposeSheet onClose={()=>{setShowCompose(false);setReplyingTo(null);setPrefillText("");}} onPost={handlePost} profile={profile} onOpenPass={()=>setShowPass(true)} replyingTo={replyingTo} prefillText={prefillText}/>}
+        {showSearch&&<SearchScreen onClose={()=>setShowSearch(false)} currentUserId={authUser?.id} currentUsername={profile?.username} isPass={profile?.is_pass||false} followingIds={followingIds} onFollow={handleFollow} onUnfollow={handleUnfollow} onReact={handleReact} onShare={setShareTarget} onReport={setReportTarget} onBoost={setBoostTarget}/>}
         {showPass&&<PassModal onClose={()=>setShowPass(false)} onActivate={handleActivatePass}/>}
         {boostTarget&&<BoostModal rant={boostTarget} onConfirm={confirmBoost} onClose={()=>setBoostTarget(null)} profile={profile}/>}
         {reportTarget&&<ReportModal onConfirm={confirmReport} onClose={()=>setReportTarget(null)}/>}
@@ -1214,120 +1678,31 @@ function CSS(){return(
     .nav-compose:hover{transform:scale(1.08)}
     .notif-dot{position:absolute;top:-4px;right:-6px;background:var(--accent);color:#fff;font-size:7px;font-family:var(--display);min-width:15px;height:15px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
 
-    .overlay{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);animation:fadeIn .2s ease}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    .bottom-sheet{background:var(--sf);border-top:1px solid var(--bd);border-radius:14px 14px 0 0;padding:20px 20px 38px;animation:slideUp .3s cubic-bezier(.34,1.3,.64,1);max-height:92vh;overflow-y:auto;width:100%;max-width:480px;position:relative;display:flex;flex-direction:column;gap:0}
-    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    .compose-sheet-inner{padding-bottom:42px}
-    .x-btn{position:absolute;top:16px;right:16px;background:var(--s2);border:1px solid var(--bd);color:var(--muted);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;z-index:1}
-    .x-btn:hover{border-color:var(--accent);color:var(--text)}
-    .x-btn-inline{background:var(--s2);border:1px solid var(--bd);color:var(--muted);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-    .x-btn-inline:hover{border-color:var(--accent);color:var(--text)}
-    .sheet-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-    .sheet-title{font-family:var(--display);font-size:22px;letter-spacing:2px}
-    .sheet-label{font-family:var(--display);font-size:13px;letter-spacing:3px;color:var(--muted);text-align:center;margin-bottom:14px}
-    .mode-sw{display:flex;background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:3px;margin-bottom:14px;gap:3px}
-    .mode-btn{flex:1;background:transparent;border:none;color:var(--muted);font-family:var(--display);font-size:12px;letter-spacing:1.5px;padding:8px;border-radius:2px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
-    .mode-btn.m-on{background:var(--accent);color:#fff}
-    .cat-picker{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
-    .cat-btn{background:var(--s2);border:1px solid var(--bd);color:var(--muted);font-family:var(--display);font-size:10px;letter-spacing:1.5px;padding:5px 10px;border-radius:2px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px}
-    .cat-btn.cat-on{background:rgba(255,59,31,.14);border-color:var(--accent);color:var(--accent)}
-    .rant-input{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);color:var(--text);font-family:var(--body);font-size:14px;font-weight:300;line-height:1.65;padding:13px;resize:none;min-height:115px;outline:none;transition:border-color .2s;margin-bottom:11px}
-    .rant-input::placeholder{color:var(--dim);font-style:italic}
-    .rant-input:focus{border-color:var(--accent)}
-    .compose-footer{display:flex;justify-content:space-between;align-items:center}
-    .char-count{font-family:var(--display);font-size:16px;color:var(--muted)}
-    .char-count.warn{color:var(--orange)}
-    .char-count.over{color:var(--accent)}
-
-    .share-preview{background:linear-gradient(135deg,#0e0e0e,#180800);border:1px solid rgba(255,59,31,.25);border-radius:8px;padding:20px;margin-bottom:16px}
-    .sc-logo{font-family:var(--display);font-size:26px;letter-spacing:4px;background:linear-gradient(135deg,var(--accent),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:7px}
-    .sc-cat{font-family:var(--display);font-size:10px;letter-spacing:2px;color:var(--accent);margin-bottom:11px}
-    .sc-text{font-size:14px;color:var(--text);line-height:1.6;font-weight:300;margin-bottom:14px;font-style:italic}
-    .sc-foot{font-size:9px;color:var(--dim);letter-spacing:2px;text-transform:uppercase}
-    .share-action-btn{flex:1;background:var(--s2);border:1px solid var(--bd);color:var(--text);font-family:var(--display);font-size:13px;letter-spacing:1.5px;padding:11px;border-radius:var(--r);cursor:pointer;transition:all .15s}
-    .share-action-btn:hover{border-color:var(--accent)}
-
-    .report-title{font-family:var(--display);font-size:21px;letter-spacing:2px;margin-bottom:16px}
-    .report-reasons{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
-    .reason-btn{background:var(--s2);border:1px solid var(--bd);color:var(--muted);font-family:var(--body);font-size:13px;padding:11px 13px;border-radius:var(--r);cursor:pointer;text-align:left;transition:all .15s}
-    .reason-btn.reason-on{border-color:var(--accent);color:var(--text);background:rgba(255,59,31,.07)}
-
-    .boost-title{font-family:var(--display);font-size:24px;letter-spacing:3px;color:var(--orange)}
-    .boost-sub{font-size:12px;color:var(--muted);line-height:1.6;max-width:270px}
-
-    .pass-sheet{gap:0}
-    .pass-hdr{text-align:center;margin-bottom:20px;padding-top:4px}
-    .pass-crown{font-size:28px;color:var(--gold);display:block;margin-bottom:7px}
-    .pass-title{font-family:var(--display);font-size:32px;letter-spacing:4px;background:linear-gradient(135deg,var(--gold),#f0d080);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .pass-sub-txt{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
-    .pass-perks{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-    .perk-row{display:flex;align-items:center;gap:11px}
-    .perk-icon{font-size:18px;flex-shrink:0;width:28px;text-align:center}
-    .perk-text{font-size:13px;color:var(--text);line-height:1.4}
-    .pass-plans{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-    .plan-btn{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s;text-align:left;gap:10px}
-    .plan-btn.plan-on{border-color:var(--gold);background:rgba(201,168,76,.07)}
-    .plan-radio{width:16px;height:16px;border-radius:50%;border:2px solid var(--bd);flex-shrink:0;transition:all .15s}
-    .plan-radio.pr-on{border-color:var(--gold);background:var(--gold)}
-    .plan-lbl{font-family:var(--display);font-size:14px;letter-spacing:2px;color:var(--text)}
-    .plan-badge{background:var(--gold);color:#000;font-family:var(--display);font-size:8px;letter-spacing:1px;padding:2px 6px;border-radius:2px}
-    .plan-price{font-family:var(--display);font-size:20px;color:var(--gold);flex-shrink:0}
-    .plan-period{font-size:11px;color:var(--muted)}
-    .pass-cta{width:100%;background:linear-gradient(135deg,var(--gold),#e0b840);border:none;color:#000;font-family:var(--display);font-size:18px;letter-spacing:2px;padding:14px;border-radius:var(--r);cursor:pointer;transition:all .15s}
-    .pass-cta:hover{transform:scale(1.02)}
-    .pass-cta:disabled{opacity:.6;cursor:not-allowed;transform:none}
-    .spinner{animation:spin .8s linear infinite;display:inline-block}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .pass-legal{font-size:10px;color:var(--dim);text-align:center;margin-top:10px}
-    .pass-success{display:flex;flex-direction:column;align-items:center;gap:12px;padding:36px 0}
-    .ps-icon{font-size:48px;color:var(--gold);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
-    .ps-title{font-family:var(--display);font-size:24px;letter-spacing:3px;color:var(--gold)}
-    .ps-sub{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
-    @keyframes popIn{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
-
-    .trend-rank{font-family:var(--display);font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:4px;padding-left:2px}
-    .cat-heat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
-    .cat-heat-card{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:13px;display:flex;flex-direction:column;gap:4px}
-    .cat-heat-lbl{font-family:var(--display);font-size:13px;letter-spacing:2px;color:var(--text)}
-    .cat-heat-val{font-size:12px;color:var(--muted)}
-
-    .notif-row{display:flex;align-items:flex-start;gap:11px;padding:13px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r)}
-    .notif-row.notif-unread{border-color:rgba(255,59,31,.28);background:rgba(255,59,31,.035)}
-    .notif-msg{font-size:13px;color:var(--text);line-height:1.4}
-    .notif-time{font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:1px}
-
-    .profile-header{display:flex;align-items:center;gap:13px;margin-bottom:18px}
-    .profile-avatar{width:56px;height:56px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:20px;letter-spacing:1px;flex-shrink:0}
-    .profile-name{font-family:var(--display);font-size:20px;letter-spacing:2px}
-    .profile-joined{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:3px}
-    .bdg-pass-lg{font-family:var(--display);font-size:9px;letter-spacing:2px;color:var(--gold);background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);padding:2px 8px;border-radius:2px}
-    .streak-badge{display:flex;align-items:center;gap:10px;background:rgba(255,59,31,.07);border:1px solid rgba(255,59,31,.22);border-radius:var(--r);padding:10px 13px;margin-bottom:13px}
-    .streak-num{font-family:var(--display);font-size:26px;color:var(--accent)}
-    .streak-lbl{font-family:var(--display);font-size:13px;letter-spacing:2px;color:var(--accent)}
-    .streak-next{font-size:10px;color:var(--muted);margin-left:auto;letter-spacing:1px}
-    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
-    .stat-box{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:12px 7px;text-align:center}
-    .stat-val{font-family:var(--display);font-size:22px;display:block;color:var(--text)}
-    .stat-lbl{font-family:var(--display);font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:2px;display:block}
-    .pass-upsell-card{width:100%;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.22);border-radius:var(--r);padding:13px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:all .2s;margin-bottom:16px;text-align:left}
-    .pass-upsell-card:hover{background:rgba(201,168,76,.11)}
-    .upsell-title{font-family:var(--display);font-size:14px;letter-spacing:2px;color:var(--gold)}
-    .upsell-sub{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
-    .pass-active-card{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.22);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:11px;margin-bottom:16px}
-    .coin-info{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:var(--r);padding:14px;margin-bottom:16px}
-    .coin-info-title{font-family:var(--display);font-size:14px;letter-spacing:2px;color:var(--gold);margin-bottom:6px}
-    .coin-info-sub{font-size:12px;color:var(--muted);line-height:1.5}
-    .section-title{font-family:var(--display);font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:8px}
-    .section-sub{font-size:10px;color:var(--dim);letter-spacing:1px;margin-top:-4px;margin-bottom:8px}
-    .my-rant-row{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:11px;margin-bottom:7px}
-    .logout-btn{width:100%;background:transparent;border:1px solid var(--bd);color:var(--muted);font-family:var(--display);font-size:12px;letter-spacing:2px;padding:11px;border-radius:var(--r);cursor:pointer;margin-top:8px;transition:all .15s}
-    .logout-btn:hover{border-color:var(--accent);color:var(--accent)}
-
-    .empty-state{display:flex;flex-direction:column;align-items:center;gap:12px;padding:60px 20px;text-align:center}
-    .empty-txt{font-family:var(--display);font-size:16px;letter-spacing:2px;color:var(--muted)}
-    ::-webkit-scrollbar{width:3px}
-    ::-webkit-scrollbar-track{background:transparent}
-    ::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
-  `}</style>
-);}
+    .overlay{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);animation:fadeIn .2s ea
+        /* SEARCH */
+        .search-icon-btn{background:var(--s2);border:1px solid var(--bd);color:var(--muted);width:34px;height:34px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+        .search-icon-btn:hover{border-color:var(--accent);color:var(--text)}
+        .search-screen{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;max-width:480px;margin:0 auto;animation:fadeIn .2s ease}
+        .search-header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--bd)}
+        .search-input-wrap{flex:1;display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--bd);border-radius:20px;padding:8px 14px}
+        .search-icon-inner{font-size:14px;flex-shrink:0}
+        .search-input{flex:1;background:none;border:none;color:var(--text);font-family:var(--body);font-size:14px;outline:none}
+        .search-input::placeholder{color:var(--dim)}
+        .search-clear{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0;line-height:1}
+        .search-cancel{background:none;border:none;color:var(--accent);font-family:var(--display);font-size:13px;letter-spacing:1.5px;cursor:pointer;flex-shrink:0}
+        .search-tabs{display:flex;gap:3px;padding:10px 16px;border-bottom:1px solid var(--bd)}
+        .search-tab{flex:1;background:var(--s2);border:1px solid var(--bd);color:var(--muted);font-family:var(--display);font-size:12px;letter-spacing:2px;padding:8px;border-radius:2px;cursor:pointer;transition:all .15s}
+        .search-tab-on{background:var(--accent);border-color:var(--accent);color:#fff}
+        .search-results{flex:1;overflow-y:auto;padding:12px 16px}
+        .search-empty{display:flex;flex-direction:column;align-items:center;gap:12px;padding:50px 20px;text-align:center}
+        .search-hint{display:flex;flex-direction:column;align-items:center;padding:60px 20px;text-align:center}
+        .people-result{display:flex;align-items:center;gap:12px;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:12px}
+        .people-avatar{width:40px;height:40px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;letter-spacing:1px;color:var(--muted);flex-shrink:0}
+        .people-info{flex:1}
+        .people-username{font-family:var(--display);font-size:14px;letter-spacing:2px;color:var(--text)}
+        .people-meta{font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:1px}
+        ::-webkit-scrollbar{width:3px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
+      `}</style>
+    );}
