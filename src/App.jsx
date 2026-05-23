@@ -1201,7 +1201,7 @@ function AuthScreen({onAuth}){
           {mode==="signup"&&<div className="auth-field"><label className="auth-lbl">EMAIL <span style={{color:"var(--dim)"}}>(optional)</span></label><input className="auth-inp" placeholder="you@email.com" value={email} onChange={e=>setEmail(e.target.value)} type="email"/></div>}
           <div className="auth-field"><label className="auth-lbl">PASSWORD</label><input className="auth-inp" placeholder="••••••••" value={password} onChange={e=>setPassword(e.target.value)} type="password" onKeyDown={e=>e.key==="Enter"&&submit()}/></div>
           {error&&<p className="auth-error">⚠ {error}</p>}
-          <button className="auth-submit" onClick={submit} disabled={loading}>{loading?<span className="spinner">◌</span>:mode==="login"?"ENTER THE VOID":"START RANTING"}</button>
+         {mode==="login"&&<button style={{background:"none",border:"none",color:"var(--dim)",fontSize:11,cursor:"pointer",marginBottom:8,letterSpacing:1}} onClick={async()=>{const u=prompt("Enter your email:");if(u){await sb.auth.resetPasswordForEmail(u);alert("Check your email for a reset link!")}}}>forgot password?</button>} <button className="auth-submit" onClick={submit} disabled={loading}>{loading?<span className="spinner">◌</span>:mode==="login"?"ENTER THE VOID":"START RANTING"}</button>
         </div>
         <p className="auth-footer">anonymous by default · no judgment here</p>
       </div>
