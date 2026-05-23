@@ -1,5 +1,5 @@
 import{useState,useEffect,useCallback,useMemo}from"react";
-import{sb,CATS,TABS,COINS_PER_RANT,COINS_PER_HEAT_MILESTONE,COIN_COST_BOOST,FREE_VOICE_LIMIT,PASS_VOICE_LIMIT,isFlipTheVoidDay,todayStr,normalizeRant,fetchRants,insertRant,toggleReaction,fetchFollowing,followUser,unfollowUser,fetchNotifications,pushNotification,updateProfile,boostRant,fetchSuggestedRanters,canReact,canUseAI,incReactionCount,addCoins,spendCoins}from"./App.jsx";
+import{sb,CATS,TABS,COINS_PER_RANT,COINS_PER_HEAT_MILESTONE,COIN_COST_BOOST,FREE_VOICE_LIMIT,PASS_VOICE_LIMIT,isFlipTheVoidDay,todayStr,canReact,canUseAI,incReactionCount,addCoins,spendCoins}from"./constants.jsx";
 import{AuthScreen,ValidationScreen,RantCard,DailyPrompt,RantOfTheDay,SuggestedRanters,ComposeSheet,PassModal,BoostModal,ReportModal,ShareCard,TrendingScreen,NotificationsScreen,ProfileScreen,FollowingFeed,InlineSearch,CoinBadge,CSS}from"./App.jsx";
 export default function App(){
   const [authUser,setAuthUser]=useState(null);
