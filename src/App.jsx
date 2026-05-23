@@ -559,10 +559,12 @@ function VoiceRecorder({onComplete,limit}){
     }catch(e){
       console.error("Upload failed",e);
       // fallback to blob url if upload fails
+     }catch(e){
+      alert("Upload failed: "+e.message);
       onComplete(result);
     }
     setUploading(false);
-  };
+  }; 
   useEffect(()=>()=>{clearInterval(timer.current);stream.current?.getTracks().forEach(t=>t.stop());},[]);
   return(
     <div className="vr-wrap">
