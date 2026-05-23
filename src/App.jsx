@@ -556,13 +556,10 @@ function VoiceRecorder({onComplete,limit}){
       if(error)throw error;
       const publicUrl=`https://tgzfokaztzwracldnhae.supabase.co/storage/v1/object/public/voice-rants/${filename}`;
       onComplete({...result,audioUrl:publicUrl});
-    }catch(e){
-      console.error("Upload failed",e);
-      // fallback to blob url if upload fails
-     }catch(e){
+  }catch(e){
       alert("Upload failed: "+e.message);
       onComplete(result);
-    }
+    }  
     setUploading(false);
   }; 
   useEffect(()=>()=>{clearInterval(timer.current);stream.current?.getTracks().forEach(t=>t.stop());},[]);
