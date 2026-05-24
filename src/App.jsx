@@ -1015,7 +1015,7 @@ function PassModal({onClose,onActivate}){
   const [plan,setPlan]=useState("yearly");
   const [processing,setProcessing]=useState(false);
   const [success,setSuccess]=useState(false);
-  const plans=[{id:"monthly",label:"MONTHLY",price:"$3.99",period:"/mo"},{id:"yearly",label:"YEARLY",price:"$29.99",period:"/yr",badge:"BEST VALUE"}];
+  const plans=[{id:"monthly",label:"MONTHLY",price:"£2.99",period:"/mo"},{id:"yearly",label:"YEARLY",price:"£29.99",period:"/yr",badge:"BEST VALUE"}];
  const PRICE_IDS={monthly:"price_1TabhU0c4dqWP5bJBqDFJ8nX",yearly:"price_1Tabih0c4dqWP5bJEbC5d27y"};
 const go=async()=>{
   setProcessing(true);
