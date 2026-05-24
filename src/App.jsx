@@ -1383,7 +1383,6 @@ export default function App(){
       if(session?.user){
         setAuthUser(session.user);
         sb.from("profiles").select("*").eq("id",session.user.id).single().then(({data})=>{if(data){setProfile(data);setAuthed(true);if(localStorage.getItem('pass_pending')&&!data.is_pass){localStorage.removeItem('pass_pending');updateProfile(data.id,{is_pass:true});setProfile({...data,is_pass:true});}}setLoading(false);});
-        });
     const {data:{subscription}}=sb.auth.onAuthStateChange((_,session)=>{if(!session){setAuthUser(null);setProfile(null);setAuthed(false);}});
     return()=>subscription.unsubscribe();
   },[]);
