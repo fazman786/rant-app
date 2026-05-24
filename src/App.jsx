@@ -1016,7 +1016,23 @@ function PassModal({onClose,onActivate}){
   const [processing,setProcessing]=useState(false);
   const [success,setSuccess]=useState(false);
   const plans=[{id:"monthly",label:"MONTHLY",price:"$3.99",period:"/mo"},{id:"yearly",label:"YEARLY",price:"$29.99",period:"/yr",badge:"BEST VALUE"}];
-  const go=()=>{setProcessing(true);setTimeout(()=>{setProcessing(false);setSuccess(true);setTimeout(onActivate,1400);},1800);};
+ const PRICE_IDS={monthly:"price_1TabhU0c4dqWP5bJBqDFJ8nX",yearly:"price_1Tabih0c4dqWP5bJEbC5d27y"};
+const go=async()=>{
+  setProcessing(true);
+  try{
+    const res=await fetch("https://tgzfokaztzwracldnhae.supabase.co/functions/v1/create-checkout",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnemZva2F6dHp3cmFjbGRuaGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxNzY1NDMsImV4cCI6MjA5NDc1MjU0M30.lf2nZ4PmSXR4KsOi8EtAoH3G7Fby3qhdIKrW-OHt1eg"},
+      body:JSON.stringify({priceId:PRICE_IDS[plan]})
+    });
+    const{url,error}=await res.json();
+    if(error)throw new Error(error);
+    window.location.href=url;
+  }catch(e){
+    alert("Payment error: "+e.message);
+    setProcessing(false);
+  }
+}; 
   return(
     <div className="overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div className="bottom-sheet pass-sheet">
