@@ -1027,6 +1027,7 @@ const go=async()=>{
     });
     const{url,error}=await res.json();
     if(error)throw new Error(error);
+    localStorage.setItem('pass_pending','1');window.location.href=url;
     window.location.href=url;
   }catch(e){
     alert("Payment error: "+e.message);
