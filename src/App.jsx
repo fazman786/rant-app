@@ -1147,6 +1147,17 @@ function ProfileScreen({profile,myRants,onOpenPass,onLogout}){
           </div>
         ))}
       <button className="logout-btn" onClick={onLogout}>SIGN OUT</button>
+<button className="logout-btn" style={{marginTop:8,borderColor:"rgba(255,59,31,.3)",color:"rgba(255,59,31,.5)"}} onClick={async()=>{
+  if(!confirm("Delete your account? This cannot be undone. All your rants will be removed."))return;
+  await sb.from("rants").delete().eq("author_id",profile.id);
+  await sb.from("reactions").delete().eq("user_id",profile.id);
+  await sb.from("notifications").delete().eq("user_id",profile.id);
+  await sb.from("follows").delete().eq("follower_id",profile.id);
+  await sb.from("profiles").delete().eq("id",profile.id);
+  await sb.auth.admin.deleteUser(profile.id);
+  await sb.auth.signOut();
+  onLogout();
+}}>DELETE ACCOUNT</button>
     </div>
   );
 }
