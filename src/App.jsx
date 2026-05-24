@@ -1379,6 +1379,7 @@ export default function App(){
     window.history.replaceState({},"","/");
   }
 },[authUser?.id]);
+    useEffect(()=>{const params=new URLSearchParams(window.location.search);if(params.get("success")==="true"&&authUser?.id){updateProfile(authUser.id,{is_pass:true});setProfile(p=>({...p,is_pass:true}));pushNotification(authUser.id,"✦","Rant Pass activated!");window.history.replaceState({},"","/");}},[authUser?.id]);
     sb.auth.getSession().then(({data:{session}})=>{
       if(session?.user){
         setAuthUser(session.user);
