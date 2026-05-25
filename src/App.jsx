@@ -214,7 +214,7 @@ async function getWrappedSummary(username, rants, streak) {
     });
     const data = await res.json();
     return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
-  } catch(e) { console.error("AI error:",e); alert(JSON.stringify(e)); return null; } 
+  } catch { return null; }
 }
 
 // ─── AI VOID REPLY (occasional thread reply) ──────────────────────────────────
