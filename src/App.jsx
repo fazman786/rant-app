@@ -213,6 +213,7 @@ async function getWrappedSummary(username, rants, streak) {
       }),
     });
     const data = await res.json();
+    alert("API response: "+JSON.stringify(data).slice(0,200));
     return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
   } catch(e) { console.error("AI error:",e); alert(JSON.stringify(e)); return null; } 
 }
