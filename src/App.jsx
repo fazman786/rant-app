@@ -115,7 +115,7 @@ async function getAIValidation(rantText, category) {
     const res = await fetch("https://api.anthropic.com/v1/messages",{
       method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":import.meta.env.VITE_ANTHROPIC_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]}),
+      body:JSON.stringify({model:"claude-sonnet-4-6-20260217",max_tokens:1000,messages:[{role:"user",content:prompt}]}),
     });
     const data = await res.json();
     return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
@@ -130,7 +130,7 @@ async function detectCategory(rantText) {
       method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":import.meta.env.VITE_ANTHROPIC_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
+        model:"claude-sonnet-4-6-20260217",
         max_tokens:1000,
         messages:[{role:"user",content:`Classify this rant into exactly one category. Reply with ONLY the category id, nothing else.\nCategories: work, people, life, tech, traffic, other\nRant: "${rantText}"\nCategory:`}],
       }),
@@ -150,7 +150,7 @@ async function predictHeat(rantText) {
       method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":import.meta.env.VITE_ANTHROPIC_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
+        model:"claude-sonnet-4-6-20260217",
         max_tokens:1000,
         messages:[{role:"user",content:`You are THE VOID, an AI in a ranting app. Rate this rant's viral potential from 1-10 and give ONE specific reason why in max 12 words. Format: exactly "X/10 — reason" with nothing else.\nRant: "${rantText}"`}],
       }),
@@ -169,7 +169,7 @@ async function summariseThread(rant) {
       method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":import.meta.env.VITE_ANTHROPIC_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
+        model:"claude-sonnet-4-6-20260217",
         max_tokens:1000,
         messages:[{role:"user",content:`You are THE VOID. Summarise this rant thread in ONE darkly funny sentence (max 20 words). Be savage but accurate. No emojis. Thread: ${threadText}`}],
       }),
@@ -187,7 +187,7 @@ async function getTrendingInsight(rants) {
       method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":import.meta.env.VITE_ANTHROPIC_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
+        model:"claude-sonnet-4-6-20260217",
         max_tokens:1000,
         messages:[{role:"user",content:`You are THE VOID. Based on these top rants today, write a darkly funny 2-sentence summary of what humanity is angry about right now. Be specific and savage. No emojis. Rants: ${topRants}`}],
       }),
@@ -207,14 +207,14 @@ async function getWrappedSummary(username, rants, streak) {
       method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":import.meta.env.VITE_ANTHROPIC_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
+        model:"claude-sonnet-4-6-20260217",
         max_tokens:1000,
         messages:[{role:"user",content:`You are THE VOID. Write a personalised 3-sentence Rant Wrapped summary for @${username}. Facts: ${rants.length} rants this period, mostly about ${topCat}, ${streak} day streak, top rant: "${topRant?.text?.slice(0,80)||"voice rant"}" with ${topRant?.heat||0} heat. Be darkly funny, specific, and make them feel like a legend. No emojis.`}],
       }),
     });
     const data = await res.json();
     return data.content?.map(b=>b.type==="text"?b.text:"").join("").trim()||null;
- } catch(e) { alert("AI error: "+e.message); return null; } 
+  } catch { return null; }
 }
 
 // ─── AI VOID REPLY (occasional thread reply) ──────────────────────────────────
@@ -226,7 +226,7 @@ async function getVoidReply(replyText, originalRant) {
       method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":import.meta.env.VITE_ANTHROPIC_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
+        model:"claude-sonnet-4-6-20260217",
         max_tokens:1000,
         messages:[{role:"user",content:`You are THE VOID dropping into a rant thread. Original rant: "${originalRant?.text||"voice rant"}". Someone replied: "${replyText}". Drop a single punchy one-liner reaction (max 12 words). Be darkly funny. No emojis. Never start with "I".`}],
       }),
@@ -1104,7 +1104,6 @@ function ProfileScreen({profile,myRants,onOpenPass,onLogout}){
 
   const fetchWrapped=async()=>{
     setWrappedLoading(true);
-    alert("myRants count: "+myRants.length);
     const s=await getWrappedSummary(profile.username,myRants,profile.streak||0);
     setWrappedSummary(s);setWrappedLoading(false);
   };
