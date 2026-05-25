@@ -1106,7 +1106,6 @@ function ProfileScreen({profile,myRants,onOpenPass,onLogout}){
     setWrappedLoading(true);
     alert("myRants count: "+myRants.length);
     const s=await getWrappedSummary(profile.username,myRants,profile.streak||0);
-    const s=await getWrappedSummary(profile.username,myRants,profile.streak||0);
     setWrappedSummary(s);setWrappedLoading(false);
   };
   return(
