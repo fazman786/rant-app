@@ -1585,7 +1585,7 @@ export default function App(){
   if(loading)return<><CSS/><div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)"}}><div style={{fontFamily:"var(--display)",fontSize:60,background:"linear-gradient(135deg,#ff3b1f,#ff8c00)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>RANT</div></div></>;
   if(showPasswordReset)return<><CSS/><ResetPasswordScreen onDone={()=>setShowPasswordReset(false)}/></>;
   const hashParams=new URLSearchParams(window.location.hash.slice(1));
-  if(hashParams.get("type")==="recovery")return<><CSS/><ResetPasswordScreen onDone={()=>window.location.href="/"}/>;
+  if(hashParams.get("type")==="recovery")return<><CSS/><ResetPasswordScreen onDone={()=>window.location.href="/"}/></>;
   if(!authed)return<><CSS/><AuthScreen onAuth={handleAuth}/></>;
   if(validationRant)return<><CSS/><ValidationScreen rant={validationRant} onDone={handleValidationDone} profile={profile}/></>;
 
