@@ -1178,7 +1178,21 @@ function ProfileScreen({profile,myRants,onOpenPass,onLogout}){
     </div>
   );
 }
-
+function ResetPasswordScreen(){
+  const [password,setPassword]=useState("");
+  const [done,setDone]=useState(false);
+  const [loading,setLoading]=useState(false);
+  const submit=async()=>{
+    if(password.length<6)return alert("Password must be 6+ characters");
+    setLoading(true);
+    const{error}=await sb.auth.updateUser({password});
+    if(error)alert(error.message);
+    else setDone(true);
+    setLoading(false);
+  };
+  if(done)return<div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)",flexDirection:"column",gap:16}}><div style={{fontFamily:"var(--display)",fontSize:32,color:"var(--accent)"}}>PASSWORD UPDATED</div><p style={{color:"var(--muted)",fontSize:13}}>You can now log in with your new password</p><button style={{background:"var(--accent)",border:"none",color:"#fff",fontFamily:"var(--display)",fontSize:14,letterSpacing:2,padding:"12px 24px",borderRadius:8,cursor:"pointer"}} onClick={()=>window.location.href="/"}>GO TO APP</button></div>;
+  return<div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"var(--bg)"}}><div style={{background:"var(--sf)",border:"1px solid var(--bd)",borderRadius:12,padding:32,width:"90%",maxWidth:380,display:"flex",flexDirection:"column",gap:16}}><div style={{fontFamily:"var(--display)",fontSize:24,letterSpacing:3,color:"var(--accent)"}}>RESET PASSWORD</div><input style={{background:"var(--s2)",border:"1px solid var(--bd)",borderRadius:8,color:"var(--text)",padding:12,fontSize:15,outline:"none"}} type="password" placeholder="new password" value={password} onChange={e=>setPassword(e.target.value)}/><button style={{background:"var(--accent)",border:"none",color:"#fff",fontFamily:"var(--display)",fontSize:16,letterSpacing:2,padding:14,borderRadius:8,cursor:"pointer"}} onClick={submit} disabled={loading}>{loading?"UPDATING...":"UPDATE PASSWORD"}</button></div></div>;
+}
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 function AuthScreen({onAuth}){
   const [mode,setMode]=useState("login");
