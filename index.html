@@ -23,10 +23,9 @@
             serviceWorkerParam: { scope: "/" },
             serviceWorkerPath: "OneSignalSDKWorker.js",
           });
-          alert("OneSignal initialized!");
           await OneSignal.Notifications.requestPermission();
         } catch(e) {
-          alert("Error: " + e.message);
+          console.error("OneSignal error:", e);
         }
       });
     </script>
