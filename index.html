@@ -11,14 +11,12 @@
     <link rel="manifest" href="/manifest.json" />
     <title>RANT</title>
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"></script>
-    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
       document.addEventListener("DOMContentLoaded", async function() {
-        // Init OneSignal
         try {
           await OneSignal.init({
             appId: "2fc0146b-2f9d-4c9c-a88b-bb51cb066bcc",
@@ -28,13 +26,6 @@
           await OneSignal.Notifications.requestPermission();
         } catch(e) {
           console.error("OneSignal error:", e);
-        }
-        // Init Paddle
-        try {
-          Paddle.Environment.set("sandbox");
-          Paddle.Initialize({ token: "test_ea7df5b77b1799b9dfc97728853" });
-        } catch(e) {
-          console.error("Paddle error:", e);
         }
       });
     </script>
