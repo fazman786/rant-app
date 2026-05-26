@@ -17,6 +17,7 @@
         await OneSignal.init({
           appId: "2fc0146b-2f9d-4c9c-a88b-bb51cb066bcc",
         });
+        await OneSignal.Notifications.requestPermission();
       });
     </script>
   </head>
