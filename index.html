@@ -26,6 +26,10 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>alert("page loaded")</script>
+    <script>
+      setTimeout(function(){
+        alert("OneSignal type: " + typeof window.OneSignal + " | Deferred: " + (window.OneSignalDeferred ? window.OneSignalDeferred.length : "none"));
+      }, 3000);
+    </script>
   </body>
 </html>
