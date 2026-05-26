@@ -1,5 +1,3 @@
-importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
-
 const CACHE = 'rant-v1';
 const ASSETS = ['/', '/index.html'];
 
