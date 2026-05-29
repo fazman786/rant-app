@@ -1,8 +1,0 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "app.rantit.app",
-    "sha256_cert_fingerprints": ["FF:73:C8:B4:42:09:75:BB:30:66:FC:39:94:97:03:14:CD:E9:C7:AF:71:33:15:68:C7:3C:EE:15:9A:D5:B4:8E"]
-  }
-}]
