@@ -3,6 +3,6 @@
   "target": {
     "namespace": "android_app",
     "package_name": "app.rantit.app",
-    "sha256_cert_fingerprints": ["FF:73:C8:B4:42:09:75:BB:30:66:FC:39:94:97:03:14:CD:E9:C7:AF:71:33:15:68:C7:3C:EE:15:9A:D5:B4:8E"]
+    "sha256_cert_fingerprints": ["70:CA:D1:B0:B9:62:5F:DE:14:50:0A:52:D3:29:B4:B7:25:EB:F3:59:0F:F1:33:3D:B3:DA:6D:80:06:C2:02:44"]
   }
 }]
