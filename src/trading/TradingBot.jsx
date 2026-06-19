@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   analyzeSignals, getTradeLog, getTradeStats, getBotConfig, saveBotConfig,
   getActivePositions, saveActivePositions, openPosition, closePositionLocal, checkPositionExits, clearAllData,
-  getBalance, saveBalance,
+  getBalance, saveBalance, mergeTradeLog,
 } from "./engine.js";
 import {
   EXCHANGES, TRADING_PAIRS, getExchangeConfig, saveExchangeConfig, clearExchangeConfig,
@@ -542,7 +542,8 @@ export default function TradingBot() {
         saveActivePositions(merged);
         setPositions(merged);
 
-        setTradeLog(data.tradeLog || []);
+        const mergedLog = mergeTradeLog(data.tradeLog || []);
+        setTradeLog(mergedLog);
 
         const bal = data.balance || { available: 10000, total: 10000 };
         const localValue = localOnly.reduce((s, p) => s + (p.value || 0), 0);
@@ -572,7 +573,8 @@ export default function TradingBot() {
           saveActivePositions(merged);
           setPositions(merged);
 
-          setTradeLog(data.tradeLog || []);
+          const mergedLog = mergeTradeLog(data.tradeLog || []);
+          setTradeLog(mergedLog);
 
           const bal = data.balance || getBalance();
           const localValue = localOnly.reduce((s, p) => s + (p.value || 0), 0);

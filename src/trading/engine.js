@@ -186,10 +186,21 @@ export function getTradeLog() {
 
 export function addTradeLog(entry) {
   const log = getTradeLog();
-  log.unshift({ ...entry, timestamp: Date.now() });
+  log.unshift({ ...entry, timestamp: Date.now(), source: "local" });
   if (log.length > 200) log.length = 200;
   LS.set("trade_log", log);
   return log;
+}
+
+export function mergeTradeLog(serverLog) {
+  const localLog = getTradeLog();
+  const localOnly = localLog.filter(e => e.source === "local");
+  const serverTimestamps = new Set(serverLog.map(e => `${e.type}_${e.symbol}_${e.timestamp}`));
+  const uniqueLocal = localOnly.filter(e => !serverTimestamps.has(`${e.type}_${e.symbol}_${e.timestamp}`));
+  const merged = [...serverLog, ...uniqueLocal].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  if (merged.length > 200) merged.length = 200;
+  LS.set("trade_log", merged);
+  return merged;
 }
 
 export function getTradeStats() {
@@ -268,7 +279,11 @@ export function openPosition(symbol, direction, entryPrice, quantity, value, sig
     value,
     stopLoss: direction === "BUY" ? entryPrice * (1 - slPct) : entryPrice * (1 + slPct),
     takeProfit: direction === "BUY" ? entryPrice * (1 + tpPct) : entryPrice * (1 - tpPct),
-    trailingStop: config.trailingStop ? entryPrice * (1 - config.trailingStopPct / 100) : null,
+    trailingStop: config.trailingStop
+      ? direction === "BUY"
+        ? entryPrice * (1 - config.trailingStopPct / 100)
+        : entryPrice * (1 + config.trailingStopPct / 100)
+      : null,
     highWaterMark: entryPrice,
     signals,
     confluence,
@@ -338,6 +353,7 @@ export function checkPositionExits(currentPrices) {
   const exits = [];
 
   for (const pos of positions) {
+    if (pos.source !== "local") continue;
     const price = currentPrices[pos.symbol];
     if (!price) continue;
 
@@ -355,6 +371,16 @@ export function checkPositionExits(currentPrices) {
       if (price <= pos.stopLoss) exits.push({ positionId: pos.id, price, reason: "stop_loss" });
       else if (price >= pos.takeProfit) exits.push({ positionId: pos.id, price, reason: "take_profit" });
     } else {
+      if (config.trailingStop && pos.trailingStop !== null) {
+        if (price < pos.highWaterMark) {
+          pos.highWaterMark = price;
+          pos.trailingStop = price * (1 + config.trailingStopPct / 100);
+        }
+        if (price >= pos.trailingStop) {
+          exits.push({ positionId: pos.id, price, reason: "trailing_stop" });
+          continue;
+        }
+      }
       if (price >= pos.stopLoss) exits.push({ positionId: pos.id, price, reason: "stop_loss" });
       else if (price <= pos.takeProfit) exits.push({ positionId: pos.id, price, reason: "take_profit" });
     }
