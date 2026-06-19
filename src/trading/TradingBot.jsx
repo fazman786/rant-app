@@ -513,9 +513,25 @@ export default function TradingBot() {
 
   const stats = useMemo(() => getTradeStats(), [tradeLog]);
 
+  const loadServerState = useCallback(async () => {
+    try {
+      const r = await fetch("/api/status");
+      const data = await r.json();
+      if (data.serverBot) return data;
+    } catch {}
+    try {
+      const r = await fetch(`https://raw.githubusercontent.com/fazman786/rant-app/bot-state/state.json?t=${Date.now()}`);
+      if (r.ok) {
+        const data = await r.json();
+        if (data.positions) return { serverBot: true, ...data };
+      }
+    } catch {}
+    return null;
+  }, []);
+
   useEffect(() => {
-    fetch("/api/status").then(r => r.json()).then(data => {
-      if (data.serverBot) {
+    loadServerState().then(data => {
+      if (data) {
         setServerMode(true);
         setPositions(data.positions || []);
         setTradeLog(data.tradeLog || []);
@@ -526,24 +542,24 @@ export default function TradingBot() {
         setExchangeConfig(prev => prev || { exchangeId: "demo", testnet: true });
         setLoading(false);
       }
-    }).catch(() => {});
+    });
   }, []);
 
   useEffect(() => {
     if (!serverMode) return;
     const poll = setInterval(() => {
-      fetch("/api/status").then(r => r.json()).then(data => {
-        if (data.serverBot) {
+      loadServerState().then(data => {
+        if (data) {
           setPositions(data.positions || []);
           setTradeLog(data.tradeLog || []);
           setBalance(data.balance);
           setLastScan(data.lastScan?.timestamp || null);
           setBotStatus(data.config?.autoTrade ? "server" : "idle");
         }
-      }).catch(() => {});
-    }, 15000);
+      });
+    }, 30000);
     return () => clearInterval(poll);
-  }, [serverMode]);
+  }, [serverMode, loadServerState]);
 
   useEffect(() => {
     if (!exchangeConfig) return;
