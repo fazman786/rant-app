@@ -406,29 +406,66 @@ export function createExchange(config) {
 
 export async function fetchHistoricalPrices(symbol, days = 14) {
   const id = symbolToCoinGecko(symbol);
-  const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}&interval=hourly`);
-  if (!res.ok) throw new Error(`CoinGecko error: ${res.status}`);
-  const data = await res.json();
-  return {
-    prices: data.prices.map(p => p[1]),
-    timestamps: data.prices.map(p => p[0]),
-    volumes: (data.total_volumes || []).map(v => v[1]),
-  };
+  const cacheKey = `hist_${symbol}_${days}`;
+  const cached = LS.get(cacheKey, null);
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      if (attempt > 0) await new Promise(r => setTimeout(r, 1500 * attempt));
+      const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}&interval=hourly`);
+      if (res.status === 429) {
+        if (cached && Date.now() - cached.ts < 600000) return cached.data;
+        continue;
+      }
+      if (!res.ok) throw new Error(`CoinGecko error: ${res.status}`);
+      const data = await res.json();
+      const result = {
+        prices: data.prices.map(p => p[1]),
+        timestamps: data.prices.map(p => p[0]),
+        volumes: (data.total_volumes || []).map(v => v[1]),
+      };
+      LS.set(cacheKey, { data: result, ts: Date.now() });
+      return result;
+    } catch (e) {
+      if (cached && Date.now() - cached.ts < 600000) return cached.data;
+      if (attempt === 2) throw e;
+    }
+  }
+  if (cached) return cached.data;
+  throw new Error("Failed to fetch historical prices");
 }
 
 export async function fetchMultiPrices(symbols) {
   const ids = symbols.map(s => symbolToCoinGecko(s)).join(",");
-  const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currency=usd&include_24hr_change=true&include_24hr_vol=true`);
-  if (!res.ok) throw new Error(`CoinGecko error: ${res.status}`);
-  const data = await res.json();
-  const result = {};
-  symbols.forEach(s => {
-    const id = symbolToCoinGecko(s);
-    if (data[id]) {
-      result[s] = { price: data[id].usd, change24h: data[id].usd_24h_change || 0, volume: data[id].usd_24h_vol || 0 };
+  const cacheKey = "multi_prices";
+  const cached = LS.get(cacheKey, null);
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      if (attempt > 0) await new Promise(r => setTimeout(r, 1500 * attempt));
+      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currency=usd&include_24hr_change=true&include_24hr_vol=true`);
+      if (res.status === 429) {
+        if (cached && Date.now() - cached.ts < 120000) return cached.data;
+        continue;
+      }
+      if (!res.ok) throw new Error(`CoinGecko error: ${res.status}`);
+      const data = await res.json();
+      const result = {};
+      symbols.forEach(s => {
+        const id = symbolToCoinGecko(s);
+        if (data[id]) {
+          result[s] = { price: data[id].usd, change24h: data[id].usd_24h_change || 0, volume: data[id].usd_24h_vol || 0 };
+        }
+      });
+      LS.set(cacheKey, { data: result, ts: Date.now() });
+      return result;
+    } catch (e) {
+      if (cached && Date.now() - cached.ts < 120000) return cached.data;
+      if (attempt === 2) throw e;
     }
-  });
-  return result;
+  }
+  if (cached) return cached.data;
+  return {};
 }
 
 export const TRADING_PAIRS = [

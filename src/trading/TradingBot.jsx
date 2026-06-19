@@ -561,10 +561,14 @@ export default function TradingBot() {
       setAnalysis(result);
     } catch (e) {
       console.error("Analysis error:", e);
-      setAnalysis(null);
+      const cached = historicalData[symbol];
+      if (cached && cached.prices?.length > 0) {
+        const result = analyzeSignals(cached.prices, cached.volumes);
+        setAnalysis(result);
+      }
     }
     setAnalysing(false);
-  }, []);
+  }, [historicalData]);
 
   useEffect(() => {
     if (!exchangeConfig) return;
@@ -644,6 +648,7 @@ export default function TradingBot() {
             await handleTrade(symbol, result.direction, result);
           }
         } catch {}
+        await new Promise(r => setTimeout(r, 2000));
       }
       setLastScan(Date.now());
       setBotStatus("waiting");
