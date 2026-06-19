@@ -539,8 +539,8 @@ export default function TradingBot() {
         setLastScan(data.lastScan?.timestamp || null);
         if (data.config) { setConfig(data.config); saveBotConfig(data.config); }
         setBotStatus(data.config?.autoTrade ? "server" : "idle");
-        setExchangeConfig(prev => prev || { exchangeId: "demo", testnet: true });
       }
+      setExchangeConfig(prev => prev || { exchangeId: "demo", testnet: true });
       setLoading(false);
     });
   }, []);
