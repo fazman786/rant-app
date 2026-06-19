@@ -1,7 +1,6 @@
 import STYLES from "./styles.js";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { createClient } from "@supabase/supabase-js";
-import TradingBot from "./trading/TradingBot.jsx";
 const SUPABASE_URL  = "https://tgzfokaztzwracldnhae.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRnemZva2F6dHp3cmFjbGRuaGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxNzY1NDMsImV4cCI6MjA5NDc1MjU0M30.lf2nZ4PmSXR4KsOi8EtAoH3G7Fby3qhdIKrW-OHt1eg";
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -54,7 +53,6 @@ const NON_ALL_CATS = CATS.slice(1);
 const TABS = [
   { id:"feed",          icon:"🔥", label:"FEED"      },
   { id:"following",     icon:"👥", label:"FOLLOWING"  },
-  { id:"trading",       icon:"📊", label:"TRADE"      },
   { id:"trending",      icon:"📈", label:"HOT"        },
   { id:"notifications", icon:"🔔", label:"ALERTS"    },
   { id:"profile",       icon:"👤", label:"ME"         },
@@ -1703,7 +1701,6 @@ export default function App(){
             </div>
           )}
           {!showSearch&&tab==="following"&&<FollowingFeed rants={rants} currentUserId={authUser?.id} currentUsername={profile?.username} isPass={profile?.is_pass||false} onFollow={handleFollow} onUnfollow={handleUnfollow} {...cardProps} followingIds={followingIds}/>}
-          {!showSearch&&tab==="trading"&&<TradingBot/>}
           {!showSearch&&tab==="trending"&&<TrendingScreen rants={rants} {...cardProps}/>}
           {!showSearch&&tab==="notifications"&&<NotificationsScreen notifs={notifs} onClear={async()=>{await sb.from("notifications").delete().eq("user_id",authUser.id);setNotifs([]);}}/>}
           {!showSearch&&tab==="profile"&&<ProfileScreen profile={profile} myRants={myRants} onOpenPass={()=>setShowPass(true)} onLogout={handleLogout}/>}
