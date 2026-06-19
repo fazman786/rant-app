@@ -5,9 +5,9 @@ const LS = {
   set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 
-const MIN_STRENGTH = 40;
+const MIN_STRENGTH = 25;
 
-export function analyzeSignals(prices, volumes = [], minConfluence = 4) {
+export function analyzeSignals(prices, volumes = [], minConfluence = 2) {
   if (prices.length < 50) return { signals: [], confluence: 0, direction: "NEUTRAL", totalSignals: 0, avgStrength: 0, confidence: 0, summary: "Insufficient data" };
 
   const signals = [];
@@ -228,7 +228,7 @@ export function getBotConfig() {
     trailingStop: true,
     trailingStopPct: 1.0,
     dailyLossLimit: 300,
-    confluenceRequired: 4,
+    confluenceRequired: 2,
   });
 }
 

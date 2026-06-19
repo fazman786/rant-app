@@ -16,7 +16,7 @@ const DEFAULT_CONFIG = {
   enabledPairs: ["BTC", "ETH", "SOL", "BNB", "XRP", "ADA"],
   trailingStop: true,
   trailingStopPct: 1.0,
-  confluenceRequired: 4,
+  confluenceRequired: 2,
 };
 
 const DEFAULT_STATE = {

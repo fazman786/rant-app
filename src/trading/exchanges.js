@@ -71,13 +71,15 @@ class DemoExchange extends BaseExchange {
   }
 
   async getTicker(symbol) {
-    try {
-      const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}USDT`);
-      if (res.ok) {
-        const t = await res.json();
-        return { price: parseFloat(t.lastPrice), change24h: parseFloat(t.priceChangePercent), volume: parseFloat(t.quoteVolume) };
-      }
-    } catch {}
+    for (const base of ['https://api.binance.com', 'https://api.binance.us']) {
+      try {
+        const res = await fetch(`${base}/api/v3/ticker/24hr?symbol=${symbol}USDT`);
+        if (res.ok) {
+          const t = await res.json();
+          return { price: parseFloat(t.lastPrice), change24h: parseFloat(t.priceChangePercent), volume: parseFloat(t.quoteVolume) };
+        }
+      } catch {}
+    }
     try {
       const id = symbolToCoinGecko(symbol);
       const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currency=usd&include_24hr_change=true&include_24hr_vol=true`);
@@ -422,21 +424,23 @@ export async function fetchHistoricalPrices(symbol, days = 14) {
   const cacheKey = `hist_${symbol}_${days}`;
   const cached = LS.get(cacheKey, null);
 
-  try {
-    const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${pair}&interval=1h&limit=${limit}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.length > 0) {
-        const result = {
-          prices: data.map(c => parseFloat(c[4])),
-          timestamps: data.map(c => c[0]),
-          volumes: data.map(c => parseFloat(c[5]) * parseFloat(c[4])),
-        };
-        LS.set(cacheKey, { data: result, ts: Date.now() });
-        return result;
+  for (const base of ['https://api.binance.com', 'https://api.binance.us']) {
+    try {
+      const res = await fetch(`${base}/api/v3/klines?symbol=${pair}&interval=1h&limit=${limit}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.length > 0) {
+          const result = {
+            prices: data.map(c => parseFloat(c[4])),
+            timestamps: data.map(c => c[0]),
+            volumes: data.map(c => parseFloat(c[5]) * parseFloat(c[4])),
+          };
+          LS.set(cacheKey, { data: result, ts: Date.now() });
+          return result;
+        }
       }
-    }
-  } catch {}
+    } catch {}
+  }
 
   try {
     const id = symbolToCoinGecko(symbol);
@@ -462,28 +466,30 @@ export async function fetchMultiPrices(symbols) {
   const cached = LS.get(cacheKey, null);
   const result = {};
 
-  try {
-    const res = await fetch("https://api.binance.com/api/v3/ticker/24hr");
-    if (res.ok) {
-      const tickers = await res.json();
-      const tickerMap = {};
-      for (const t of tickers) tickerMap[t.symbol] = t;
-      for (const s of symbols) {
-        const t = tickerMap[`${s}USDT`];
-        if (t) {
-          result[s] = {
-            price: parseFloat(t.lastPrice),
-            change24h: parseFloat(t.priceChangePercent),
-            volume: parseFloat(t.quoteVolume),
-          };
+  for (const base of ['https://api.binance.com', 'https://api.binance.us']) {
+    try {
+      const res = await fetch(`${base}/api/v3/ticker/24hr`);
+      if (res.ok) {
+        const tickers = await res.json();
+        const tickerMap = {};
+        for (const t of tickers) tickerMap[t.symbol] = t;
+        for (const s of symbols) {
+          const t = tickerMap[`${s}USDT`];
+          if (t) {
+            result[s] = {
+              price: parseFloat(t.lastPrice),
+              change24h: parseFloat(t.priceChangePercent),
+              volume: parseFloat(t.quoteVolume),
+            };
+          }
+        }
+        if (Object.keys(result).length > 0) {
+          LS.set(cacheKey, { data: result, ts: Date.now() });
+          return result;
         }
       }
-      if (Object.keys(result).length > 0) {
-        LS.set(cacheKey, { data: result, ts: Date.now() });
-        return result;
-      }
-    }
-  } catch {}
+    } catch {}
+  }
 
   try {
     const ids = symbols.map(s => symbolToCoinGecko(s)).join(",");
