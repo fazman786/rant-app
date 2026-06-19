@@ -6,17 +6,10 @@
     "stopLossPct": 1.5,
     "takeProfitPct": 4.5,
     "maxOpenPositions": 2,
-    "enabledPairs": [
-      "BTC",
-      "ETH",
-      "SOL",
-      "BNB",
-      "XRP",
-      "ADA"
-    ],
+    "enabledPairs": ["BTC", "ETH", "SOL", "BNB", "XRP", "ADA"],
     "trailingStop": true,
     "trailingStopPct": 1,
-    "confluenceRequired": 4
+    "confluenceRequired": 2
   },
   "positions": [],
   "tradeLog": [],
@@ -24,13 +17,7 @@
     "available": 10000,
     "total": 10000
   },
-  "lastScan": {
-    "timestamp": 1781865916422,
-    "scannedPairs": 6,
-    "openPositions": 0,
-    "newTrades": 0,
-    "closedTrades": 0
-  },
+  "lastScan": null,
   "stats": {
     "totalTrades": 0,
     "wins": 0,
@@ -39,37 +26,5 @@
     "totalPnL": "0.00",
     "avgWin": "0.00",
     "avgLoss": "0.00"
-  },
-  "prices": {
-    "BTC": {
-      "price": 62417.78,
-      "change24h": -2.534,
-      "volume": 1255016.8970206
-    },
-    "ETH": {
-      "price": 1688.61,
-      "change24h": -3.434,
-      "volume": 874096.405247
-    },
-    "SOL": {
-      "price": 68.15,
-      "change24h": -4.163,
-      "volume": 372332.5969
-    },
-    "BNB": {
-      "price": 571.52,
-      "change24h": -3.124,
-      "volume": 124468.22355
-    },
-    "XRP": {
-      "price": 1.1223,
-      "change24h": -3.97,
-      "volume": 536757.69804
-    },
-    "ADA": {
-      "price": 0.15969,
-      "change24h": -4.32,
-      "volume": 43438.527123
-    }
   }
 }
