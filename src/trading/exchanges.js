@@ -72,12 +72,17 @@ class DemoExchange extends BaseExchange {
 
   async getTicker(symbol) {
     try {
+      const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}USDT`);
+      if (res.ok) {
+        const t = await res.json();
+        return { price: parseFloat(t.lastPrice), change24h: parseFloat(t.priceChangePercent), volume: parseFloat(t.quoteVolume) };
+      }
+    } catch {}
+    try {
       const id = symbolToCoinGecko(symbol);
       const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currency=usd&include_24hr_change=true&include_24hr_vol=true`);
       const data = await res.json();
-      if (data[id]) {
-        return { price: data[id].usd, change24h: data[id].usd_24h_change || 0, volume: data[id].usd_24h_vol || 0 };
-      }
+      if (data[id]) return { price: data[id].usd, change24h: data[id].usd_24h_change || 0, volume: data[id].usd_24h_vol || 0 };
     } catch {}
     return { price: 0, change24h: 0, volume: 0 };
   }
@@ -338,6 +343,13 @@ class WebhookExchange extends BaseExchange {
 
   async getTicker(symbol) {
     try {
+      const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}USDT`);
+      if (res.ok) {
+        const t = await res.json();
+        return { price: parseFloat(t.lastPrice), change24h: parseFloat(t.priceChangePercent), volume: parseFloat(t.quoteVolume) };
+      }
+    } catch {}
+    try {
       const id = symbolToCoinGecko(symbol);
       const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currency=usd&include_24hr_change=true`);
       const data = await res.json();
@@ -405,19 +417,31 @@ export function createExchange(config) {
 }
 
 export async function fetchHistoricalPrices(symbol, days = 14) {
-  const id = symbolToCoinGecko(symbol);
+  const pair = `${symbol.toUpperCase()}USDT`;
+  const limit = days * 24;
   const cacheKey = `hist_${symbol}_${days}`;
   const cached = LS.get(cacheKey, null);
 
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      if (attempt > 0) await new Promise(r => setTimeout(r, 1500 * attempt));
-      const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}&interval=hourly`);
-      if (res.status === 429) {
-        if (cached && Date.now() - cached.ts < 600000) return cached.data;
-        continue;
+  try {
+    const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${pair}&interval=1h&limit=${limit}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.length > 0) {
+        const result = {
+          prices: data.map(c => parseFloat(c[4])),
+          timestamps: data.map(c => c[0]),
+          volumes: data.map(c => parseFloat(c[5]) * parseFloat(c[4])),
+        };
+        LS.set(cacheKey, { data: result, ts: Date.now() });
+        return result;
       }
-      if (!res.ok) throw new Error(`CoinGecko error: ${res.status}`);
+    }
+  } catch {}
+
+  try {
+    const id = symbolToCoinGecko(symbol);
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}&interval=hourly`);
+    if (res.ok) {
       const data = await res.json();
       const result = {
         prices: data.prices.map(p => p[1]),
@@ -426,44 +450,59 @@ export async function fetchHistoricalPrices(symbol, days = 14) {
       };
       LS.set(cacheKey, { data: result, ts: Date.now() });
       return result;
-    } catch (e) {
-      if (cached && Date.now() - cached.ts < 600000) return cached.data;
-      if (attempt === 2) throw e;
     }
-  }
+  } catch {}
+
   if (cached) return cached.data;
   throw new Error("Failed to fetch historical prices");
 }
 
 export async function fetchMultiPrices(symbols) {
-  const ids = symbols.map(s => symbolToCoinGecko(s)).join(",");
   const cacheKey = "multi_prices";
   const cached = LS.get(cacheKey, null);
+  const result = {};
 
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      if (attempt > 0) await new Promise(r => setTimeout(r, 1500 * attempt));
-      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currency=usd&include_24hr_change=true&include_24hr_vol=true`);
-      if (res.status === 429) {
-        if (cached && Date.now() - cached.ts < 120000) return cached.data;
-        continue;
+  try {
+    const res = await fetch("https://api.binance.com/api/v3/ticker/24hr");
+    if (res.ok) {
+      const tickers = await res.json();
+      const tickerMap = {};
+      for (const t of tickers) tickerMap[t.symbol] = t;
+      for (const s of symbols) {
+        const t = tickerMap[`${s}USDT`];
+        if (t) {
+          result[s] = {
+            price: parseFloat(t.lastPrice),
+            change24h: parseFloat(t.priceChangePercent),
+            volume: parseFloat(t.quoteVolume),
+          };
+        }
       }
-      if (!res.ok) throw new Error(`CoinGecko error: ${res.status}`);
+      if (Object.keys(result).length > 0) {
+        LS.set(cacheKey, { data: result, ts: Date.now() });
+        return result;
+      }
+    }
+  } catch {}
+
+  try {
+    const ids = symbols.map(s => symbolToCoinGecko(s)).join(",");
+    const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currency=usd&include_24hr_change=true&include_24hr_vol=true`);
+    if (res.ok) {
       const data = await res.json();
-      const result = {};
       symbols.forEach(s => {
         const id = symbolToCoinGecko(s);
         if (data[id]) {
           result[s] = { price: data[id].usd, change24h: data[id].usd_24h_change || 0, volume: data[id].usd_24h_vol || 0 };
         }
       });
-      LS.set(cacheKey, { data: result, ts: Date.now() });
-      return result;
-    } catch (e) {
-      if (cached && Date.now() - cached.ts < 120000) return cached.data;
-      if (attempt === 2) throw e;
+      if (Object.keys(result).length > 0) {
+        LS.set(cacheKey, { data: result, ts: Date.now() });
+        return result;
+      }
     }
-  }
+  } catch {}
+
   if (cached) return cached.data;
   return {};
 }
