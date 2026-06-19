@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.rantit.app",
+      "sha256_cert_fingerprints": [
+        "70:CA:D1:B0:B9:62:5F:DE:14:50:0A:52:D3:29:B4:B7:25:EB:F3:59:0F:F1:33:3D:B3:DA:6D:80:06:C2:02:44",
+        "D6:EE:67:E4:D9:50:08:70:69:6F:8A:71:6A:D3:1D:3E:FF:78:21:74:F8:AA:72:E6:59:D7:69:79:F3:1A:5E:79"
+      ]
+    }
+  }
+]
