@@ -5,9 +5,7 @@ const LS = {
   set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 
-const MIN_CONFLUENCE = 3;
-
-export function analyzeSignals(prices, volumes = []) {
+export function analyzeSignals(prices, volumes = [], minConfluence = 3) {
   if (prices.length < 30) return { signals: [], confluence: 0, direction: "NEUTRAL", totalSignals: 0, avgStrength: 0, summary: "Insufficient data" };
 
   const signals = [];
@@ -88,8 +86,8 @@ export function analyzeSignals(prices, volumes = []) {
 
   let direction = "NEUTRAL";
   let confluence = Math.max(buySignals.length, sellSignals.length);
-  if (buySignals.length >= MIN_CONFLUENCE) direction = "BUY";
-  else if (sellSignals.length >= MIN_CONFLUENCE) direction = "SELL";
+  if (buySignals.length >= minConfluence) direction = "BUY";
+  else if (sellSignals.length >= minConfluence) direction = "SELL";
 
   const dirSignals = signals.filter(s => s.direction === direction);
   const avgStrength = dirSignals.length > 0 ? Math.round(dirSignals.reduce((s, sig) => s + sig.strength, 0) / dirSignals.length) : 0;

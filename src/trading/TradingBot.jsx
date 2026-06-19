@@ -430,7 +430,7 @@ function SettingsPanel({ config, onSave, exchangeConfig, onDisconnect }) {
         <div className="tb-settings-row">
           <span className="tb-settings-lbl">Confluence Required</span>
           <div className="tb-settings-input-wrap">
-            <input type="number" className="tb-settings-input" value={cfg.confluenceRequired} onChange={e => update("confluenceRequired", Number(e.target.value))} min={2} max={6} />
+            <input type="number" className="tb-settings-input" value={cfg.confluenceRequired} onChange={e => update("confluenceRequired", Number(e.target.value))} min={1} max={6} />
             <span className="tb-settings-unit">/ 6 indicators</span>
           </div>
         </div>
@@ -557,18 +557,18 @@ export default function TradingBot() {
     try {
       const data = await fetchHistoricalPrices(symbol, 14);
       setHistoricalData(prev => ({ ...prev, [symbol]: data }));
-      const result = analyzeSignals(data.prices, data.volumes);
+      const result = analyzeSignals(data.prices, data.volumes, config.confluenceRequired);
       setAnalysis(result);
     } catch (e) {
       console.error("Analysis error:", e);
       const cached = historicalData[symbol];
       if (cached && cached.prices?.length > 0) {
-        const result = analyzeSignals(cached.prices, cached.volumes);
+        const result = analyzeSignals(cached.prices, cached.volumes, config.confluenceRequired);
         setAnalysis(result);
       }
     }
     setAnalysing(false);
-  }, [historicalData]);
+  }, [historicalData, config.confluenceRequired]);
 
   useEffect(() => {
     if (!exchangeConfig) return;
@@ -577,7 +577,7 @@ export default function TradingBot() {
     return () => clearInterval(iv);
   }, [exchangeConfig, loadPrices, loadBalance]);
 
-  useEffect(() => { if (exchangeConfig) analyzeSymbol(selectedPair); }, [selectedPair, exchangeConfig]);
+  useEffect(() => { if (exchangeConfig) analyzeSymbol(selectedPair); }, [selectedPair, exchangeConfig, config.confluenceRequired]);
 
   const handleTrade = useCallback(async (symbol, direction, analysis) => {
     const price = pricesRef.current[symbol]?.price;
@@ -643,7 +643,7 @@ export default function TradingBot() {
 
         try {
           const data = await fetchHistoricalPrices(symbol, 14);
-          const result = analyzeSignals(data.prices, data.volumes);
+          const result = analyzeSignals(data.prices, data.volumes, config.confluenceRequired);
           if (result.direction !== "NEUTRAL" && result.confluence >= config.confluenceRequired) {
             await handleTrade(symbol, result.direction, result);
           }
