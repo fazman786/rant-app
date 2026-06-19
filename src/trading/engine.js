@@ -236,6 +236,14 @@ export function saveBotConfig(config) {
   LS.set("bot_config", config);
 }
 
+export function getBalance() {
+  return LS.get("bot_balance", { available: 10000, total: 10000 });
+}
+
+export function saveBalance(balance) {
+  LS.set("bot_balance", balance);
+}
+
 export function getActivePositions() {
   return LS.get("active_positions", []);
 }
@@ -269,6 +277,10 @@ export function openPosition(symbol, direction, entryPrice, quantity, value, sig
 
   positions.push(position);
   saveActivePositions(positions);
+
+  const bal = getBalance();
+  bal.available = Math.max(0, bal.available - value);
+  saveBalance(bal);
 
   addTradeLog({
     type: "OPEN",
@@ -311,6 +323,12 @@ export function closePositionLocal(positionId, exitPrice, reason = "manual") {
 
   const remaining = positions.filter(p => p.id !== positionId);
   saveActivePositions(remaining);
+
+  const bal = getBalance();
+  bal.available += pos.value + pnl;
+  bal.total += pnl;
+  saveBalance(bal);
+
   return { pnl, pnlPct, result: pnl > 0 ? "WIN" : "LOSS" };
 }
 
@@ -352,4 +370,5 @@ export function clearAllData() {
   localStorage.removeItem("demo_portfolio");
   localStorage.removeItem("demo_order_history");
   localStorage.removeItem("bot_config");
+  localStorage.removeItem("bot_balance");
 }

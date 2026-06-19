@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   analyzeSignals, getTradeLog, getTradeStats, getBotConfig, saveBotConfig,
-  getActivePositions, openPosition, closePositionLocal, checkPositionExits, clearAllData,
+  getActivePositions, saveActivePositions, openPosition, closePositionLocal, checkPositionExits, clearAllData,
+  getBalance, saveBalance,
 } from "./engine.js";
 import {
   EXCHANGES, TRADING_PAIRS, getExchangeConfig, saveExchangeConfig, clearExchangeConfig,
@@ -505,7 +506,7 @@ export default function TradingBot() {
   const [loading, setLoading] = useState(true);
   const [botStatus, setBotStatus] = useState("idle");
   const [lastScan, setLastScan] = useState(null);
-  const [balance, setBalance] = useState(null);
+  const [balance, setBalance] = useState(() => getBalance());
   const [serverMode, setServerMode] = useState(false);
   const autoRef = useRef(null);
   const pricesRef = useRef(prices);
@@ -533,9 +534,22 @@ export default function TradingBot() {
     loadServerState().then(data => {
       if (data) {
         setServerMode(true);
-        setPositions(data.positions || []);
+        const serverPositions = data.positions || [];
+        const localPositions = getActivePositions();
+        const serverIds = new Set(serverPositions.map(p => p.id));
+        const localOnly = localPositions.filter(p => !serverIds.has(p.id) && p.source === "local");
+        const merged = [...serverPositions, ...localOnly];
+        saveActivePositions(merged);
+        setPositions(merged);
+
         setTradeLog(data.tradeLog || []);
-        setBalance(data.balance || { available: 10000, total: 10000 });
+
+        const bal = data.balance || { available: 10000, total: 10000 };
+        const localValue = localOnly.reduce((s, p) => s + (p.value || 0), 0);
+        const finalBal = { available: bal.available - localValue, total: bal.total };
+        saveBalance(finalBal);
+        setBalance(finalBal);
+
         setLastScan(data.lastScan?.timestamp || null);
         if (data.config) { setConfig(data.config); saveBotConfig(data.config); }
         setBotStatus(data.config?.autoTrade ? "server" : "idle");
@@ -550,9 +564,22 @@ export default function TradingBot() {
     const poll = setInterval(() => {
       loadServerState().then(data => {
         if (data) {
-          setPositions(data.positions || []);
+          const serverPositions = data.positions || [];
+          const localPositions = getActivePositions();
+          const serverIds = new Set(serverPositions.map(p => p.id));
+          const localOnly = localPositions.filter(p => !serverIds.has(p.id) && p.source === "local");
+          const merged = [...serverPositions, ...localOnly];
+          saveActivePositions(merged);
+          setPositions(merged);
+
           setTradeLog(data.tradeLog || []);
-          setBalance(data.balance);
+
+          const bal = data.balance || getBalance();
+          const localValue = localOnly.reduce((s, p) => s + (p.value || 0), 0);
+          const finalBal = { available: bal.available - localValue, total: bal.total };
+          saveBalance(finalBal);
+          setBalance(finalBal);
+
           setLastScan(data.lastScan?.timestamp || null);
           setBotStatus(data.config?.autoTrade ? "server" : "idle");
         }
@@ -578,28 +605,15 @@ export default function TradingBot() {
       if (exits.length > 0) {
         for (const exit of exits) {
           closePositionLocal(exit.positionId, exit.price, exit.reason);
-          if (exchange && exchangeConfig.exchangeId !== "demo") {
-            const pos = positions.find(p => p.id === exit.positionId);
-            if (pos) {
-              try { await exchange.placeOrder(pos.symbol, pos.direction === "BUY" ? "SELL" : "BUY", pos.quantity); } catch {}
-            }
-          }
         }
         setPositions(getActivePositions());
         setTradeLog(getTradeLog());
+        setBalance(getBalance());
       }
     } catch (e) {
       console.error("Price load error:", e);
     }
-  }, [config.enabledPairs, exchange]);
-
-  const loadBalance = useCallback(async () => {
-    if (!exchange) return;
-    try {
-      const bal = await exchange.getBalance();
-      setBalance(bal);
-    } catch {}
-  }, [exchange]);
+  }, [config.enabledPairs]);
 
   const analyzeSymbol = useCallback(async (symbol) => {
     setAnalysing(true);
@@ -621,10 +635,10 @@ export default function TradingBot() {
 
   useEffect(() => {
     if (!exchangeConfig) return;
-    Promise.all([loadPrices(), loadBalance()]).then(() => setLoading(false));
-    const iv = setInterval(() => { loadPrices(); loadBalance(); }, 30000);
+    loadPrices().then(() => setLoading(false));
+    const iv = setInterval(loadPrices, 30000);
     return () => clearInterval(iv);
-  }, [exchangeConfig, loadPrices, loadBalance]);
+  }, [exchangeConfig, loadPrices]);
 
   useEffect(() => { if (exchangeConfig) analyzeSymbol(selectedPair); }, [selectedPair, exchangeConfig, config.confluenceRequired]);
 
@@ -635,50 +649,35 @@ export default function TradingBot() {
     const posCount = getActivePositions().length;
     if (posCount >= config.maxOpenPositions) return;
 
-    let quantity;
-    if (exchange && balance) {
-      const posValue = balance.available * (config.positionSizePct / 100);
-      quantity = posValue / price;
-    } else {
-      quantity = (10000 * config.positionSizePct / 100) / price;
-    }
-
+    const currentBal = getBalance();
+    const posValue = currentBal.available * (config.positionSizePct / 100);
+    if (posValue < 1) return;
+    const quantity = posValue / price;
     const value = quantity * price;
     const sigNames = analysis.signals.filter(s => s.direction === direction).map(s => s.name);
 
-    if (exchange) {
-      try {
-        await exchange.placeOrder(symbol, direction === "BUY" ? "BUY" : "SELL", quantity);
-      } catch (e) {
-        console.error("Order failed:", e);
-        return;
-      }
-    }
+    const pos = openPosition(symbol, direction, price, quantity, value, sigNames, analysis.confluence);
 
-    openPosition(symbol, direction, price, quantity, value, sigNames, analysis.confluence);
+    const allPositions = getActivePositions();
+    const idx = allPositions.findIndex(p => p.id === pos.id);
+    if (idx >= 0) allPositions[idx].source = "local";
+    saveActivePositions(allPositions);
+
     setPositions(getActivePositions());
     setTradeLog(getTradeLog());
-    loadBalance();
-  }, [exchange, balance, config]);
+    setBalance(getBalance());
+  }, [config]);
 
   const handleClosePosition = useCallback(async (posId, symbol) => {
     const pos = getActivePositions().find(p => p.id === posId);
     const price = pricesRef.current[symbol]?.price;
     if (!price || !pos) return;
 
-    if (exchange) {
-      try {
-        await exchange.placeOrder(symbol, pos.direction === "BUY" ? "SELL" : "BUY", pos.quantity);
-      } catch (e) {
-        console.error("Close order failed:", e);
-      }
-    }
-
     closePositionLocal(posId, price, "manual");
     setPositions(getActivePositions());
     setTradeLog(getTradeLog());
-    loadBalance();
-  }, [exchange, loadBalance]);
+    setBalance(getBalance());
+  }, []);
 
   useEffect(() => {
     if (!config.autoTrade || !exchangeConfig) { clearInterval(autoRef.current); setBotStatus("idle"); return; }
@@ -756,7 +755,7 @@ export default function TradingBot() {
                 <div>
                   <div className="tb-bal-lbl">BALANCE</div>
                   <div className="tb-bal-val">
-                    ${balance ? Number(balance.available).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "10,000.00"}
+                    ${Number(balance?.available ?? 10000).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                 </div>
                 <div className="tb-bal-stats-mini">
