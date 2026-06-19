@@ -540,8 +540,8 @@ export default function TradingBot() {
         if (data.config) { setConfig(data.config); saveBotConfig(data.config); }
         setBotStatus(data.config?.autoTrade ? "server" : "idle");
         setExchangeConfig(prev => prev || { exchangeId: "demo", testnet: true });
-        setLoading(false);
       }
+      setLoading(false);
     });
   }, []);
 
