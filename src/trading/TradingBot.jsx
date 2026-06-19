@@ -506,11 +506,44 @@ export default function TradingBot() {
   const [botStatus, setBotStatus] = useState("idle");
   const [lastScan, setLastScan] = useState(null);
   const [balance, setBalance] = useState(null);
+  const [serverMode, setServerMode] = useState(false);
   const autoRef = useRef(null);
   const pricesRef = useRef(prices);
   pricesRef.current = prices;
 
   const stats = useMemo(() => getTradeStats(), [tradeLog]);
+
+  useEffect(() => {
+    fetch("/api/status").then(r => r.json()).then(data => {
+      if (data.serverBot) {
+        setServerMode(true);
+        setPositions(data.positions || []);
+        setTradeLog(data.tradeLog || []);
+        setBalance(data.balance || { available: 10000, total: 10000 });
+        setLastScan(data.lastScan?.timestamp || null);
+        if (data.config) { setConfig(data.config); saveBotConfig(data.config); }
+        setBotStatus(data.config?.autoTrade ? "server" : "idle");
+        setExchangeConfig(prev => prev || { exchangeId: "demo", testnet: true });
+        setLoading(false);
+      }
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!serverMode) return;
+    const poll = setInterval(() => {
+      fetch("/api/status").then(r => r.json()).then(data => {
+        if (data.serverBot) {
+          setPositions(data.positions || []);
+          setTradeLog(data.tradeLog || []);
+          setBalance(data.balance);
+          setLastScan(data.lastScan?.timestamp || null);
+          setBotStatus(data.config?.autoTrade ? "server" : "idle");
+        }
+      }).catch(() => {});
+    }, 15000);
+    return () => clearInterval(poll);
+  }, [serverMode]);
 
   useEffect(() => {
     if (!exchangeConfig) return;
@@ -694,7 +727,7 @@ export default function TradingBot() {
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div className={`tb-bot-status ${config.autoTrade ? "tb-bot-on" : "tb-bot-off"}`}>
               <div className={`tb-status-dot ${config.autoTrade ? "tb-dot-on" : ""}`} />
-              <span>{config.autoTrade ? botStatus === "scanning" ? "SCANNING" : "AUTO" : "MANUAL"}</span>
+              <span>{serverMode ? config.autoTrade ? "SERVER 24/7" : "PAUSED" : config.autoTrade ? botStatus === "scanning" ? "SCANNING" : "AUTO" : "MANUAL"}</span>
             </div>
           </div>
         </header>
@@ -724,14 +757,17 @@ export default function TradingBot() {
               <div className="tb-toggle" onClick={() => {
                 const next = { ...config, autoTrade: !config.autoTrade };
                 setConfig(next); saveBotConfig(next);
+                if (serverMode) fetch("/api/config", { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + (localStorage.getItem("cron_secret") || "") }, body: JSON.stringify({ autoTrade: next.autoTrade }) }).catch(() => {});
               }}>
                 <div className={`tb-toggle-dot ${config.autoTrade ? "tb-toggle-on" : "tb-toggle-off"}`} />
                 <div>
-                  <div className="tb-toggle-lbl">AUTO TRADE</div>
+                  <div className="tb-toggle-lbl">{serverMode ? "SERVER BOT" : "AUTO TRADE"}</div>
                   <div className="tb-toggle-sub">
-                    {config.autoTrade
-                      ? lastScan ? `last scan ${ago(lastScan)}` : "scanning..."
-                      : "manual mode"}
+                    {serverMode
+                      ? config.autoTrade ? lastScan ? `running 24/7 · scanned ${ago(lastScan)}` : "running 24/7" : "paused"
+                      : config.autoTrade
+                        ? lastScan ? `last scan ${ago(lastScan)}` : "scanning..."
+                        : "manual mode"}
                   </div>
                 </div>
               </div>
