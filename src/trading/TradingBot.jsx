@@ -287,7 +287,13 @@ function PositionsPanel({ positions, prices, onClose }) {
             <div className="tb-pos-signals">
               {pos.signals.map(s => <span key={s} className="tb-pos-sig-tag">{s}</span>)}
               <span className="tb-pos-sig-tag" style={{ color: "#00ffa3", borderColor: "rgba(0,255,163,.2)" }}>{pos.confluence} CONF</span>
+              {pos.aiConfidence && <span className="tb-pos-sig-tag" style={{ color: "#a78bfa", borderColor: "rgba(124,58,237,.3)" }}>AI {pos.aiConfidence}%</span>}
             </div>
+            {pos.aiReasoning && (
+              <div style={{ fontSize: 11, color: "var(--dim)", padding: "6px 0 2px", borderTop: "1px solid rgba(255,255,255,.05)", marginTop: 6 }}>
+                &#129302; {pos.aiReasoning}
+              </div>
+            )}
           </div>
         );
       })}
@@ -312,6 +318,7 @@ function HistoryPanel({ log }) {
             {trade.pnl >= 0 ? "+" : ""}${trade.pnl?.toFixed(2)}
           </div>
           <div className="tb-hist-reason">{(trade.reason || "").replace("_", " ").toUpperCase()}</div>
+          {trade.aiReasoning && <div style={{ gridColumn: "1 / -1", fontSize: 10, color: "#a78bfa", padding: "2px 0 0" }}>&#129302; {trade.aiReasoning}</div>}
         </div>
       ))}
     </div>
@@ -361,11 +368,11 @@ function StatsPanel({ stats }) {
       <div className="tb-strategy-info">
         <div className="tb-strategy-title">HOW IT WORKS</div>
         <div className="tb-strategy-body">
-          <p><strong>Multi-Indicator Confluence Strategy</strong></p>
-          <p>The bot analyses 6 independent technical indicators simultaneously. A trade is only executed when 3 or more indicators agree on the same direction, significantly reducing false signals.</p>
-          <p style={{ marginTop: 8 }}><strong>Indicators:</strong> RSI (14), EMA Crossover (12/26), MACD (12/26/9), Bollinger Bands (20, 2SD), Moving Average Trend (20/50), Volume Analysis</p>
-          <p style={{ marginTop: 8 }}><strong>Risk Management:</strong> Automatic stop-loss and take-profit on every trade. Configurable position sizing, trailing stops, and daily loss limits.</p>
-          <p style={{ marginTop: 8 }}><strong>Why confluence works:</strong> Each indicator measures a different aspect of price action — momentum, trend, volatility, volume. When they all agree, the probability of the trade succeeding is substantially higher than any single indicator alone.</p>
+          <p><strong>AI-Powered Trading Engine</strong></p>
+          <p>The bot uses Claude AI to analyse all market data, technical indicators, portfolio state, and trade history simultaneously. AI evaluates the full picture — not just individual signals — to make higher-quality trading decisions.</p>
+          <p style={{ marginTop: 8 }}><strong>Technical Indicators:</strong> RSI (14), EMA Crossover (12/26), MACD (12/26/9), Bollinger Bands (20, 2SD), Moving Average Trend (20/50), Volume Analysis</p>
+          <p style={{ marginTop: 8 }}><strong>AI Analysis:</strong> All indicator data, current positions, balance, and recent trade performance are sent to Claude AI, which returns a market outlook, per-asset trade recommendations with confidence scores, and risk warnings.</p>
+          <p style={{ marginTop: 8 }}><strong>Risk Management:</strong> Automatic stop-loss and take-profit on every trade. AI trades require 65%+ confidence. Falls back to rule-based confluence strategy when AI is unavailable.</p>
         </div>
       </div>
     </>
@@ -508,6 +515,8 @@ export default function TradingBot() {
   const [lastScan, setLastScan] = useState(null);
   const [balance, setBalance] = useState(() => getBalance());
   const [serverMode, setServerMode] = useState(false);
+  const [aiAnalysis, setAiAnalysis] = useState(null);
+  const [aiPowered, setAiPowered] = useState(false);
   const autoRef = useRef(null);
   const pricesRef = useRef(prices);
   pricesRef.current = prices;
@@ -552,6 +561,8 @@ export default function TradingBot() {
         setBalance(finalBal);
 
         setLastScan(data.lastScan?.timestamp || null);
+        if (data.aiAnalysis) setAiAnalysis(data.aiAnalysis);
+        if (data.lastScan?.aiPowered) setAiPowered(true);
         if (data.config) { setConfig(data.config); saveBotConfig(data.config); }
         setBotStatus(data.config?.autoTrade ? "server" : "idle");
       }
@@ -583,6 +594,8 @@ export default function TradingBot() {
           setBalance(finalBal);
 
           setLastScan(data.lastScan?.timestamp || null);
+          if (data.aiAnalysis) setAiAnalysis(data.aiAnalysis);
+          if (data.lastScan?.aiPowered) setAiPowered(true);
           setBotStatus(data.config?.autoTrade ? "server" : "idle");
         }
       });
@@ -742,6 +755,11 @@ export default function TradingBot() {
             <div className="tb-logo-sub">{ex?.icon} {ex?.name} {exchangeConfig.testnet ? "· TESTNET" : ""}</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {aiPowered && (
+              <div style={{ background: "linear-gradient(135deg, #7c3aed, #2563eb)", padding: "3px 10px", borderRadius: 6, fontSize: 10, fontFamily: "var(--display)", letterSpacing: 2, color: "#fff" }}>
+                AI POWERED
+              </div>
+            )}
             <div className={`tb-bot-status ${config.autoTrade ? "tb-bot-on" : "tb-bot-off"}`}>
               <div className={`tb-status-dot ${config.autoTrade ? "tb-dot-on" : ""}`} />
               <span>{serverMode ? config.autoTrade ? "SERVER 24/7" : "PAUSED" : config.autoTrade ? botStatus === "scanning" ? "SCANNING" : "AUTO" : "MANUAL"}</span>
@@ -800,6 +818,35 @@ export default function TradingBot() {
                 </div>
               </div>
             </div>
+
+            {/* AI INSIGHTS */}
+            {aiAnalysis && (
+              <div style={{ background: "linear-gradient(135deg, rgba(124,58,237,.12), rgba(37,99,235,.12))", border: "1px solid rgba(124,58,237,.3)", borderRadius: 12, padding: 16, marginBottom: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <span style={{ fontSize: 16 }}>&#129302;</span>
+                  <span style={{ fontFamily: "var(--display)", fontSize: 12, letterSpacing: 2, color: "#a78bfa" }}>AI MARKET ANALYSIS</span>
+                  {aiAnalysis.timestamp && <span style={{ fontSize: 10, color: "var(--dim)", marginLeft: "auto" }}>{ago(aiAnalysis.timestamp)}</span>}
+                </div>
+                <p style={{ fontSize: 13, color: "var(--text)", lineHeight: 1.5, margin: 0 }}>{aiAnalysis.marketOutlook}</p>
+                {aiAnalysis.riskWarning && (
+                  <div style={{ marginTop: 10, padding: "8px 12px", background: "rgba(255,59,31,.1)", border: "1px solid rgba(255,59,31,.25)", borderRadius: 8, fontSize: 12, color: "#ff6b4f" }}>
+                    &#9888;&#65039; {aiAnalysis.riskWarning}
+                  </div>
+                )}
+                {aiAnalysis.trades && aiAnalysis.trades.length > 0 && (
+                  <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 6 }}>
+                    {aiAnalysis.trades.map((t, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", background: "rgba(255,255,255,.03)", borderRadius: 6, fontSize: 12 }}>
+                        <span style={{ fontFamily: "var(--display)", letterSpacing: 1, color: t.action === "BUY" ? "#00ffa3" : t.action === "SELL" ? "#ff3b1f" : "var(--dim)", minWidth: 36 }}>{t.action}</span>
+                        <span style={{ fontFamily: "var(--display)", letterSpacing: 1, color: "var(--text)" }}>{t.symbol}</span>
+                        <span style={{ color: "var(--dim)", flex: 1 }}>{t.reasoning}</span>
+                        <span style={{ fontFamily: "var(--display)", letterSpacing: 1, color: t.confidence >= 75 ? "#00ffa3" : t.confidence >= 65 ? "var(--orange)" : "var(--dim)" }}>{t.confidence}%</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* MARKET GRID */}
             <div className="tb-section">MARKETS <span className="tb-section-count">{config.enabledPairs.length} pairs</span></div>
