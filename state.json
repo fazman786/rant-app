@@ -28,8 +28,8 @@
       "value": 299.4672682770536,
       "stopLoss": 72.550075,
       "takeProfit": 70.38977500000001,
-      "trailingStop": 72.5786,
-      "highWaterMark": 71.86,
+      "trailingStop": 71.7201,
+      "highWaterMark": 71.01,
       "signals": [
         "MACD",
         "MA Trend"
@@ -46,8 +46,8 @@
       "value": 290.483250228742,
       "stopLoss": 593.71975,
       "takeProfit": 576.04075,
-      "trailingStop": 595.193,
-      "highWaterMark": 589.3,
+      "trailingStop": 591.456,
+      "highWaterMark": 585.6,
       "signals": [
         "EMA Cross",
         "MACD"
@@ -321,10 +321,10 @@
   ],
   "balance": {
     "available": 9392.291757395991,
-    "total": 9981.830927825697
+    "total": 9988.22480441717
   },
   "lastScan": {
-    "timestamp": 1782178475201,
+    "timestamp": 1782193708087,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -342,34 +342,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 64177.31,
-      "change24h": -0.455,
-      "volume": 1198682.1369729
+      "price": 63386.64,
+      "change24h": -1.279,
+      "volume": 1241624.2191027
     },
     "ETH": {
-      "price": 1732.98,
-      "change24h": -0.567,
-      "volume": 627788.556861
+      "price": 1714.08,
+      "change24h": -1.352,
+      "volume": 635715.769267
     },
     "SOL": {
-      "price": 71.86,
-      "change24h": -3.167,
-      "volume": 447359.72002
+      "price": 71.01,
+      "change24h": -4.015,
+      "volume": 407049.10383
     },
     "BNB": {
-      "price": 591.4,
-      "change24h": -0.105,
-      "volume": 77953.34027
+      "price": 585.6,
+      "change24h": -1.205,
+      "volume": 75864.61778
     },
     "XRP": {
-      "price": 1.1321,
-      "change24h": -0.91,
-      "volume": 767146.29718
+      "price": 1.114,
+      "change24h": -1.824,
+      "volume": 720012.62504
     },
     "ADA": {
-      "price": 0.15962,
-      "change24h": -0.888,
-      "volume": 35726.033354
+      "price": 0.15783,
+      "change24h": -1.731,
+      "volume": 33449.838302
     }
   }
 }
