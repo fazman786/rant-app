@@ -3,31 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#ff3b1f" />
+    <meta name="theme-color" content="#00ffa3" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="RANT" />
-    <meta name="description" content="Scream into the void. Anonymous venting app." />
-    <link rel="manifest" href="/manifest.json" />
-    <title>RANT</title>
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"></script>
+    <meta name="apple-mobile-web-app-title" content="AutoTrade" />
+    <meta name="description" content="Automated trading bot with multi-indicator confluence strategy" />
+    <title>AutoTrade</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", async function() {
-        try {
-          await OneSignal.init({
-            appId: "2fc0146b-2f9d-4c9c-a88b-bb51cb066bcc",
-            serviceWorkerParam: { scope: "/" },
-            serviceWorkerPath: "OneSignalSDKWorker.js",
-          });
-          await OneSignal.Notifications.requestPermission();
-        } catch(e) {
-          console.error("OneSignal error:", e);
-        }
-      });
-    </script>
   </body>
 </html>
