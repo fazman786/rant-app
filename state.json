@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "mqwbl12y59mk",
-      "symbol": "BNB",
-      "direction": "SELL",
-      "entryPrice": 562.72,
-      "quantity": 0.5319903972583735,
-      "value": 299.36163634523194,
-      "stopLoss": 566.9404000000001,
-      "takeProfit": 550.0588,
-      "trailingStop": 557.1664999999999,
-      "highWaterMark": 551.65,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "confluence": 2,
-      "openedAt": 1782562325434
-    },
-    {
       "id": "mqws8vnscxeg",
       "symbol": "ETH",
       "direction": "SELL",
@@ -46,17 +28,64 @@
       "value": 290.3009853658812,
       "stopLoss": 1589.93575,
       "takeProfit": 1542.59275,
-      "trailingStop": 1585.6394,
-      "highWaterMark": 1569.94,
+      "trailingStop": 1579.1451,
+      "highWaterMark": 1563.51,
       "signals": [
         "MACD",
         "Volume"
       ],
       "confluence": 2,
       "openedAt": 1782590312008
+    },
+    {
+      "id": "mqy7mbggt730",
+      "symbol": "BTC",
+      "direction": "SELL",
+      "entryPrice": 59456.15,
+      "quantity": 0.004891215441337939,
+      "value": 290.8128389625047,
+      "stopLoss": 59902.071125,
+      "takeProfit": 58118.38662500001,
+      "trailingStop": 60050.711500000005,
+      "highWaterMark": 59456.15,
+      "signals": [
+        "MACD",
+        "Volume"
+      ],
+      "confluence": 2,
+      "openedAt": 1782676599425
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "BTC",
+      "direction": "SELL",
+      "price": 59456.15,
+      "quantity": 0.004891215441337939,
+      "value": 290.8128389625047,
+      "confluence": 2,
+      "signals": [
+        "MACD",
+        "Volume"
+      ],
+      "timestamp": 1782676599425
+    },
+    {
+      "type": "CLOSE",
+      "symbol": "BNB",
+      "direction": "SELL",
+      "entryPrice": 562.72,
+      "exitPrice": 547.68,
+      "quantity": 0.5319903972583735,
+      "value": 299.36163634523194,
+      "pnl": 8.001135574765978,
+      "pnlPct": 2.6727324424225327,
+      "reason": "take_profit",
+      "result": "WIN",
+      "duration": 114273548,
+      "timestamp": 1782676598982
+    },
     {
       "type": "OPEN",
       "symbol": "ETH",
@@ -849,56 +878,56 @@
     }
   ],
   "balance": {
-    "available": 9386.39852683016,
-    "total": 9983.009811281745
+    "available": 9402.948459787653,
+    "total": 9986.74620235727
   },
   "lastScan": {
-    "timestamp": 1782671893672,
+    "timestamp": 1782676599425,
     "scannedPairs": 6,
     "openPositions": 2,
-    "newTrades": 0,
-    "closedTrades": 0,
+    "newTrades": 1,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 26,
-    "wins": 7,
+    "totalTrades": 27,
+    "wins": 8,
     "losses": 19,
-    "winRate": "26.9",
-    "totalPnL": "-23.94",
-    "avgWin": "6.23",
+    "winRate": "29.6",
+    "totalPnL": "-15.94",
+    "avgWin": "6.45",
     "avgLoss": "3.55"
   },
   "prices": {
     "BTC": {
-      "price": 59600.74,
-      "change24h": -1.584,
-      "volume": 1661319.80033
+      "price": 59456.15,
+      "change24h": -1.198,
+      "volume": 1856479.9045866
     },
     "ETH": {
-      "price": 1569.94,
-      "change24h": -1.538,
-      "volume": 182808.531283
+      "price": 1563.51,
+      "change24h": -0.925,
+      "volume": 167503.070154
     },
     "SOL": {
-      "price": 71.05,
-      "change24h": -1.333,
-      "volume": 143466.29042
+      "price": 70.65,
+      "change24h": -0.661,
+      "volume": 145358.26842
     },
     "BNB": {
-      "price": 552.48,
-      "change24h": -1.752,
-      "volume": 19988.97677
+      "price": 547.68,
+      "change24h": -2.172,
+      "volume": 20406.59033
     },
     "XRP": {
-      "price": 1.0446,
-      "change24h": -1.388,
-      "volume": 270588.03265
+      "price": 1.0434,
+      "change24h": -1.062,
+      "volume": 266962.40436
     },
     "ADA": {
-      "price": 0.14286,
-      "change24h": -2.691,
-      "volume": 21485.073724
+      "price": 0.14252,
+      "change24h": -2.136,
+      "volume": 21449.314403
     }
   }
 }
