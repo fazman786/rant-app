@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "mr3ehv63a1px",
-      "symbol": "BTC",
-      "direction": "BUY",
-      "entryPrice": 61270.43,
-      "quantity": 0.004888057939993341,
-      "value": 299.4934118483062,
-      "stopLoss": 60810.901775000006,
-      "takeProfit": 62649.014675,
-      "trailingStop": 61624.6488,
-      "highWaterMark": 62247.12,
-      "signals": [
-        "MACD",
-        "MA Trend"
-      ],
-      "confluence": 2,
-      "openedAt": 1782990479883
-    },
-    {
       "id": "mr5afll9aiar",
       "symbol": "BNB",
       "direction": "BUY",
@@ -46,17 +28,64 @@
       "value": 290.99177400436383,
       "stopLoss": 563.8690250000001,
       "takeProfit": 580.912925,
-      "trailingStop": 564.498,
-      "highWaterMark": 570.2,
+      "trailingStop": 567.6659999999999,
+      "highWaterMark": 573.4,
       "signals": [
         "MACD",
         "MA Trend"
       ],
       "confluence": 2,
       "openedAt": 1783104588046
+    },
+    {
+      "id": "mr5fq5v5m8v4",
+      "symbol": "BTC",
+      "direction": "BUY",
+      "entryPrice": 62670.89,
+      "quantity": 0.004650519388321458,
+      "value": 291.4521890283614,
+      "stopLoss": 62200.858325,
+      "takeProfit": 64080.985024999994,
+      "trailingStop": 62044.1811,
+      "highWaterMark": 62670.89,
+      "signals": [
+        "MACD",
+        "MA Trend"
+      ],
+      "confluence": 2,
+      "openedAt": 1783113478961
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "BTC",
+      "direction": "BUY",
+      "price": 62670.89,
+      "quantity": 0.004650519388321458,
+      "value": 291.4521890283614,
+      "confluence": 2,
+      "signals": [
+        "MACD",
+        "MA Trend"
+      ],
+      "timestamp": 1783113478961
+    },
+    {
+      "type": "CLOSE",
+      "symbol": "BTC",
+      "direction": "BUY",
+      "entryPrice": 61270.43,
+      "exitPrice": 62670.89,
+      "quantity": 0.004888057939993341,
+      "value": 299.4934118483062,
+      "pnl": 6.84552962264307,
+      "pnlPct": 2.285702907585273,
+      "reason": "take_profit",
+      "result": "WIN",
+      "duration": 122998522,
+      "timestamp": 1783113478405
+    },
     {
       "type": "OPEN",
       "symbol": "BNB",
@@ -1345,56 +1374,56 @@
     }
   ],
   "balance": {
-    "available": 9408.734026141097,
-    "total": 10004.80774679413
+    "available": 9423.620778583685,
+    "total": 10008.763994690536
   },
   "lastScan": {
-    "timestamp": 1783109096043,
+    "timestamp": 1783113478962,
     "scannedPairs": 6,
     "openPositions": 2,
-    "newTrades": 0,
-    "closedTrades": 0,
+    "newTrades": 1,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 43,
-    "wins": 14,
+    "totalTrades": 44,
+    "wins": 15,
     "losses": 29,
-    "winRate": "32.6",
-    "totalPnL": "-0.78",
-    "avgWin": "7.01",
+    "winRate": "34.1",
+    "totalPnL": "6.06",
+    "avgWin": "6.99",
     "avgLoss": "3.41"
   },
   "prices": {
     "BTC": {
-      "price": 62196.83,
-      "change24h": 1.242,
-      "volume": 2304545.1140951
+      "price": 62670.89,
+      "change24h": 1.846,
+      "volume": 2767720.3977981
     },
     "ETH": {
-      "price": 1745.11,
-      "change24h": 2.767,
-      "volume": 419538.796741
+      "price": 1766.35,
+      "change24h": 3.675,
+      "volume": 526134.988736
     },
     "SOL": {
-      "price": 82.39,
-      "change24h": 2.145,
-      "volume": 408045.26174
+      "price": 82.54,
+      "change24h": 1.776,
+      "volume": 426963.73053
     },
     "BNB": {
-      "price": 570.2,
-      "change24h": 2.057,
-      "volume": 76928.0423
+      "price": 573.4,
+      "change24h": 2.778,
+      "volume": 76601.46061
     },
     "XRP": {
-      "price": 1.1288,
-      "change24h": 4.133,
-      "volume": 330086.57569
+      "price": 1.1343,
+      "change24h": 4.718,
+      "volume": 343566.10659
     },
     "ADA": {
-      "price": 0.1809,
-      "change24h": 12.985,
-      "volume": 96816.217972
+      "price": 0.17948,
+      "change24h": 11.603,
+      "volume": 111543.301386
     }
   }
 }
