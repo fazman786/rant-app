@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "mr73rt0689om",
-      "symbol": "SOL",
-      "direction": "SELL",
-      "entryPrice": 80.82,
-      "quantity": 3.6068013305838416,
-      "value": 291.50168353778605,
-      "stopLoss": 81.42614999999999,
-      "takeProfit": 79.00155,
-      "trailingStop": 81.00200000000001,
-      "highWaterMark": 80.2,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "confluence": 2,
-      "openedAt": 1783214332566
-    },
-    {
       "id": "mr7sqc33y7gr",
       "symbol": "BNB",
       "direction": "BUY",
@@ -46,17 +28,64 @@
       "value": 291.51104324866486,
       "stopLoss": 579.87805,
       "takeProfit": 597.40585,
-      "trailingStop": 578.4173999999999,
-      "highWaterMark": 584.26,
+      "trailingStop": 583.7139,
+      "highWaterMark": 589.61,
       "signals": [
         "MACD",
         "MA Trend"
       ],
       "confluence": 2,
       "openedAt": 1783256254383
+    },
+    {
+      "id": "mr7vwode3gow",
+      "symbol": "SOL",
+      "direction": "BUY",
+      "entryPrice": 81.13,
+      "quantity": 3.592718096942735,
+      "value": 291.47721920496406,
+      "stopLoss": 80.521525,
+      "takeProfit": 82.95542499999999,
+      "trailingStop": 80.31869999999999,
+      "highWaterMark": 81.13,
+      "signals": [
+        "MACD",
+        "Volume"
+      ],
+      "confluence": 2,
+      "openedAt": 1783261589090
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "SOL",
+      "direction": "BUY",
+      "price": 81.13,
+      "quantity": 3.592718096942735,
+      "value": 291.47721920496406,
+      "confluence": 2,
+      "signals": [
+        "MACD",
+        "Volume"
+      ],
+      "timestamp": 1783261589090
+    },
+    {
+      "type": "CLOSE",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "entryPrice": 80.82,
+      "exitPrice": 81.13,
+      "quantity": 3.6068013305838416,
+      "value": 291.50168353778605,
+      "pnl": -1.118108412480999,
+      "pnlPct": -0.3835684236575133,
+      "reason": "trailing_stop",
+      "result": "LOSS",
+      "duration": 47256285,
+      "timestamp": 1783261588851
+    },
     {
       "type": "OPEN",
       "symbol": "BNB",
@@ -1432,56 +1461,56 @@
     }
   ],
   "balance": {
-    "available": 9425.523731706831,
-    "total": 10008.392186440058
+    "available": 9424.430087627172,
+    "total": 10010.087682366735
   },
   "lastScan": {
-    "timestamp": 1783256254383,
+    "timestamp": 1783261589090,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 1,
-    "closedTrades": 0,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 46,
+    "totalTrades": 47,
     "wins": 17,
-    "losses": 29,
-    "winRate": "37.0",
-    "totalPnL": "8.54",
+    "losses": 30,
+    "winRate": "36.2",
+    "totalPnL": "7.42",
     "avgWin": "6.32",
-    "avgLoss": "3.41"
+    "avgLoss": "3.33"
   },
   "prices": {
     "BTC": {
-      "price": 62737.21,
-      "change24h": 0.164,
-      "volume": 4228251.1404063
+      "price": 62712.82,
+      "change24h": 0.06,
+      "volume": 4142775.1980225
     },
     "ETH": {
-      "price": 1765.43,
-      "change24h": 0.117,
-      "volume": 453972.745012
+      "price": 1768.48,
+      "change24h": -0.102,
+      "volume": 426618.096229
     },
     "SOL": {
-      "price": 80.86,
-      "change24h": -0.834,
-      "volume": 216480.94441
+      "price": 81.13,
+      "change24h": -0.686,
+      "volume": 231242.39403
     },
     "BNB": {
-      "price": 584.26,
-      "change24h": 1.747,
-      "volume": 57117.27389
+      "price": 589.61,
+      "change24h": 2.528,
+      "volume": 58618.60895
     },
     "XRP": {
-      "price": 1.1353,
-      "change24h": -1.132,
-      "volume": 812825.20539
+      "price": 1.1348,
+      "change24h": -2.223,
+      "volume": 786668.88915
     },
     "ADA": {
-      "price": 0.18755,
-      "change24h": 5.365,
-      "volume": 138420.159481
+      "price": 0.1885,
+      "change24h": 4.276,
+      "volume": 128391.89035
     }
   }
 }
