@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "mrb6849f33dg",
-      "symbol": "SOL",
-      "direction": "SELL",
-      "entryPrice": 80.63,
-      "quantity": 3.7127497747148057,
-      "value": 299.35901433525476,
-      "stopLoss": 81.234725,
-      "takeProfit": 78.815825,
-      "trailingStop": 81.0929,
-      "highWaterMark": 80.29,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "confluence": 2,
-      "openedAt": 1783460317587
-    },
-    {
       "id": "mrb6849f6wmq",
       "symbol": "BNB",
       "direction": "SELL",
@@ -46,17 +28,64 @@
       "value": 290.37824390519717,
       "stopLoss": 582.5566500000001,
       "takeProfit": 565.21005,
-      "trailingStop": 584.0022,
-      "highWaterMark": 578.22,
+      "trailingStop": 574.6496000000001,
+      "highWaterMark": 568.96,
       "signals": [
         "EMA Cross",
         "MACD"
       ],
       "confluence": 2,
       "openedAt": 1783460317587
+    },
+    {
+      "id": "mrbknlht6rfx",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "entryPrice": 78.7,
+      "quantity": 3.695840345998156,
+      "value": 290.8626352300549,
+      "stopLoss": 79.29025000000001,
+      "takeProfit": 76.92925000000001,
+      "trailingStop": 79.48700000000001,
+      "highWaterMark": 78.7,
+      "signals": [
+        "MACD",
+        "MA Trend"
+      ],
+      "confluence": 2,
+      "openedAt": 1783484554385
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "price": 78.7,
+      "quantity": 3.695840345998156,
+      "value": 290.8626352300549,
+      "confluence": 2,
+      "signals": [
+        "MACD",
+        "MA Trend"
+      ],
+      "timestamp": 1783484554385
+    },
+    {
+      "type": "CLOSE",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "entryPrice": 80.63,
+      "exitPrice": 78.7,
+      "quantity": 3.7127497747148057,
+      "value": 299.35901433525476,
+      "pnl": 7.165607065199548,
+      "pnlPct": 2.393650006201157,
+      "reason": "take_profit",
+      "result": "WIN",
+      "duration": 24236361,
+      "timestamp": 1783484553948
+    },
     {
       "type": "OPEN",
       "symbol": "BNB",
@@ -1811,56 +1840,56 @@
     }
   ],
   "balance": {
-    "available": 9388.896552934708,
-    "total": 9979.660115219944
+    "available": 9404.558539105108,
+    "total": 9990.449728742526
   },
   "lastScan": {
-    "timestamp": 1783472643004,
+    "timestamp": 1783484554386,
     "scannedPairs": 6,
     "openPositions": 2,
-    "newTrades": 0,
-    "closedTrades": 0,
+    "newTrades": 1,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 59,
-    "wins": 19,
+    "totalTrades": 60,
+    "wins": 20,
     "losses": 40,
-    "winRate": "32.2",
-    "totalPnL": "-21.37",
-    "avgWin": "6.19",
+    "winRate": "33.3",
+    "totalPnL": "-14.20",
+    "avgWin": "6.24",
     "avgLoss": "3.48"
   },
   "prices": {
     "BTC": {
-      "price": 63559.44,
-      "change24h": -0.72,
-      "volume": 4543252.1336158
+      "price": 62881.32,
+      "change24h": -0.53,
+      "volume": 5059266.8278496
     },
     "ETH": {
-      "price": 1780.16,
-      "change24h": -0.785,
-      "volume": 494416.842983
+      "price": 1756.21,
+      "change24h": -0.852,
+      "volume": 779301.412147
     },
     "SOL": {
-      "price": 80.29,
-      "change24h": -2.157,
-      "volume": 266226.84379
+      "price": 78.7,
+      "change24h": -2.659,
+      "volume": 609804.29994
     },
     "BNB": {
-      "price": 578.69,
-      "change24h": -1.112,
-      "volume": 183948.25157
+      "price": 568.96,
+      "change24h": -1.68,
+      "volume": 264239.31061
     },
     "XRP": {
-      "price": 1.1146,
-      "change24h": -2.578,
-      "volume": 208479.55395
+      "price": 1.0966,
+      "change24h": -2.594,
+      "volume": 207771.65189
     },
     "ADA": {
-      "price": 0.17549,
-      "change24h": -4.775,
-      "volume": 31272.564608
+      "price": 0.17037,
+      "change24h": -5.382,
+      "volume": 38189.835009
     }
   }
 }
