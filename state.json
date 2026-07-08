@@ -28,8 +28,8 @@
       "value": 290.37824390519717,
       "stopLoss": 582.5566500000001,
       "takeProfit": 565.21005,
-      "trailingStop": 574.6496000000001,
-      "highWaterMark": 568.96,
+      "trailingStop": 571.7913,
+      "highWaterMark": 566.13,
       "signals": [
         "EMA Cross",
         "MACD"
@@ -46,8 +46,8 @@
       "value": 290.8626352300549,
       "stopLoss": 79.29025000000001,
       "takeProfit": 76.92925000000001,
-      "trailingStop": 79.48700000000001,
-      "highWaterMark": 78.7,
+      "trailingStop": 78.7194,
+      "highWaterMark": 77.94,
       "signals": [
         "MACD",
         "MA Trend"
@@ -1841,14 +1841,14 @@
   ],
   "balance": {
     "available": 9404.558539105108,
-    "total": 9990.449728742526
+    "total": 9994.67977461079
   },
   "lastScan": {
-    "timestamp": 1783484554386,
+    "timestamp": 1783492899253,
     "scannedPairs": 6,
     "openPositions": 2,
-    "newTrades": 1,
-    "closedTrades": 1,
+    "newTrades": 0,
+    "closedTrades": 0,
     "aiPowered": false
   },
   "stats": {
@@ -1862,34 +1862,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 62881.32,
-      "change24h": -0.53,
-      "volume": 5059266.8278496
+      "price": 62500,
+      "change24h": -1.201,
+      "volume": 5086207.6069682
     },
     "ETH": {
-      "price": 1756.21,
-      "change24h": -0.852,
-      "volume": 779301.412147
+      "price": 1748.88,
+      "change24h": -1.427,
+      "volume": 789829.500644
     },
     "SOL": {
-      "price": 78.7,
-      "change24h": -2.659,
-      "volume": 609804.29994
+      "price": 77.94,
+      "change24h": -4.204,
+      "volume": 633596.60125
     },
     "BNB": {
-      "price": 568.96,
-      "change24h": -1.68,
-      "volume": 264239.31061
+      "price": 566.13,
+      "change24h": -2.459,
+      "volume": 267808.7944
     },
     "XRP": {
-      "price": 1.0966,
-      "change24h": -2.594,
-      "volume": 207771.65189
+      "price": 1.0875,
+      "change24h": -3.855,
+      "volume": 196685.98076
     },
     "ADA": {
-      "price": 0.17037,
-      "change24h": -5.382,
-      "volume": 38189.835009
+      "price": 0.16859,
+      "change24h": -6.666,
+      "volume": 39729.080226
     }
   }
 }
