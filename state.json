@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "mrd97g05no0t",
-      "symbol": "BTC",
-      "direction": "BUY",
-      "entryPrice": 63015.56,
-      "quantity": 0.004756141481007147,
-      "value": 299.7109188648947,
-      "stopLoss": 62542.9433,
-      "takeProfit": 64433.410099999994,
-      "trailingStop": 63769.761,
-      "highWaterMark": 64413.9,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "confluence": 2,
-      "openedAt": 1783586257349
-    },
-    {
       "id": "mrf3u2bx8eez",
       "symbol": "ADA",
       "direction": "SELL",
@@ -46,17 +28,64 @@
       "value": 290.65856453308504,
       "stopLoss": 0.16738605,
       "takeProfit": 0.16240185000000001,
-      "trailingStop": 0.16780140000000002,
-      "highWaterMark": 0.16614,
+      "trailingStop": 0.167761,
+      "highWaterMark": 0.1661,
       "signals": [
         "EMA Cross",
         "MACD"
       ],
       "confluence": 2,
       "openedAt": 1783698167373
+    },
+    {
+      "id": "mrfaol3s909n",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "entryPrice": 77.38,
+      "quantity": 3.761113054788301,
+      "value": 291.0349281795187,
+      "stopLoss": 77.96035,
+      "takeProfit": 75.63895,
+      "trailingStop": 78.15379999999999,
+      "highWaterMark": 77.38,
+      "signals": [
+        "EMA Cross",
+        "MACD"
+      ],
+      "confluence": 2,
+      "openedAt": 1783709669080
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "price": 77.38,
+      "quantity": 3.761113054788301,
+      "value": 291.0349281795187,
+      "confluence": 2,
+      "signals": [
+        "EMA Cross",
+        "MACD"
+      ],
+      "timestamp": 1783709669080
+    },
+    {
+      "type": "CLOSE",
+      "symbol": "BTC",
+      "direction": "BUY",
+      "entryPrice": 63015.56,
+      "exitPrice": 63750,
+      "quantity": 0.004756141481007147,
+      "value": 299.7109188648947,
+      "pnl": 3.4931005493109,
+      "pnlPct": 1.1654899202673155,
+      "reason": "trailing_stop",
+      "result": "WIN",
+      "duration": 123411294,
+      "timestamp": 1783709668643
+    },
     {
       "type": "OPEN",
       "symbol": "ADA",
@@ -1985,56 +2014,56 @@
     }
   ],
   "balance": {
-    "available": 9397.960253236417,
-    "total": 9991.157219658297
+    "available": 9410.129344471105,
+    "total": 9991.892816373436
   },
   "lastScan": {
-    "timestamp": 1783704369588,
+    "timestamp": 1783709669081,
     "scannedPairs": 6,
     "openPositions": 2,
-    "newTrades": 0,
-    "closedTrades": 0,
+    "newTrades": 1,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 65,
-    "wins": 23,
+    "totalTrades": 66,
+    "wins": 24,
     "losses": 42,
-    "winRate": "35.4",
-    "totalPnL": "-11.67",
-    "avgWin": "5.89",
+    "winRate": "36.4",
+    "totalPnL": "-8.18",
+    "avgWin": "5.79",
     "avgLoss": "3.50"
   },
   "prices": {
     "BTC": {
-      "price": 63948.46,
-      "change24h": 1.799,
-      "volume": 4267044.559985
+      "price": 63750,
+      "change24h": 0.819,
+      "volume": 4062996.2879349
     },
     "ETH": {
-      "price": 1792.7,
-      "change24h": 2.85,
-      "volume": 698702.798847
+      "price": 1782.89,
+      "change24h": 1.837,
+      "volume": 691327.761488
     },
     "SOL": {
-      "price": 77.85,
-      "change24h": -0.039,
-      "volume": 314934.75226
+      "price": 77.38,
+      "change24h": -0.96,
+      "volume": 313208.86944
     },
     "BNB": {
-      "price": 577.09,
-      "change24h": 0.955,
-      "volume": 74952.89855
+      "price": 576.52,
+      "change24h": 0.792,
+      "volume": 70824.75561
     },
     "XRP": {
-      "price": 1.103,
-      "change24h": 0.869,
-      "volume": 237040.7577
+      "price": 1.1006,
+      "change24h": 0.64,
+      "volume": 188341.60486
     },
     "ADA": {
-      "price": 0.16706,
-      "change24h": 0.632,
-      "volume": 34847.810394
+      "price": 0.1661,
+      "change24h": -0.216,
+      "volume": 34967.035254
     }
   }
 }
