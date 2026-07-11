@@ -18,8 +18,41 @@
     "trailingStopPct": 1,
     "confluenceRequired": 2
   },
-  "positions": [],
+  "positions": [
+    {
+      "id": "mrg59wte3zzj",
+      "symbol": "ADA",
+      "direction": "BUY",
+      "entryPrice": 0.16797,
+      "quantity": 1783.6494574777164,
+      "value": 299.59959937253205,
+      "stopLoss": 0.16671022500000002,
+      "takeProfit": 0.171749325,
+      "trailingStop": 0.1662903,
+      "highWaterMark": 0.16797,
+      "signals": [
+        "EMA Cross",
+        "MACD"
+      ],
+      "confluence": 2,
+      "openedAt": 1783761052514
+    }
+  ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "ADA",
+      "direction": "BUY",
+      "price": 0.16797,
+      "quantity": 1783.6494574777164,
+      "value": 299.59959937253205,
+      "confluence": 2,
+      "signals": [
+        "EMA Cross",
+        "MACD"
+      ],
+      "timestamp": 1783761052514
+    },
     {
       "type": "CLOSE",
       "symbol": "ADA",
@@ -2007,15 +2040,15 @@
     }
   ],
   "balance": {
-    "available": 9986.653312417735,
+    "available": 9687.053713045203,
     "total": 9986.653312417735
   },
   "lastScan": {
-    "timestamp": 1783756124514,
+    "timestamp": 1783761052514,
     "scannedPairs": 6,
-    "openPositions": 0,
-    "newTrades": 0,
-    "closedTrades": 1,
+    "openPositions": 1,
+    "newTrades": 1,
+    "closedTrades": 0,
     "aiPowered": false
   },
   "stats": {
@@ -2029,34 +2062,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 64175,
-      "change24h": 0.349,
-      "volume": 3686230.6885068
+      "price": 64280.86,
+      "change24h": 0.061,
+      "volume": 3712632.1459094
     },
     "ETH": {
-      "price": 1800.23,
-      "change24h": 1.572,
-      "volume": 509830.58206
+      "price": 1801.6,
+      "change24h": 0.93,
+      "volume": 507407.104956
     },
     "SOL": {
-      "price": 78,
-      "change24h": -1.103,
-      "volume": 268940.26983
+      "price": 78.19,
+      "change24h": -1.213,
+      "volume": 292668.57966
     },
     "BNB": {
-      "price": 577.52,
-      "change24h": 0.587,
-      "volume": 58902.19209
+      "price": 578.52,
+      "change24h": 0.486,
+      "volume": 58939.63849
     },
     "XRP": {
-      "price": 1.1082,
-      "change24h": 0.19,
-      "volume": 168533.90777
+      "price": 1.1097,
+      "change24h": -0.341,
+      "volume": 166628.13496
     },
     "ADA": {
-      "price": 0.16759,
-      "change24h": 0.588,
-      "volume": 26405.315088
+      "price": 0.16797,
+      "change24h": 0.095,
+      "volume": 26787.210353
     }
   }
 }
