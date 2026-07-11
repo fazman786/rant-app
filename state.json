@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "mrg59wte3zzj",
-      "symbol": "ADA",
-      "direction": "BUY",
-      "entryPrice": 0.16797,
-      "quantity": 1783.6494574777164,
-      "value": 299.59959937253205,
-      "stopLoss": 0.16671022500000002,
-      "takeProfit": 0.171749325,
-      "trailingStop": 0.167508,
-      "highWaterMark": 0.1692,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "confluence": 2,
-      "openedAt": 1783761052514
-    },
-    {
       "id": "mrghlyy6phne",
       "symbol": "ETH",
       "direction": "BUY",
@@ -46,8 +28,8 @@
       "value": 290.61161139135606,
       "stopLoss": 1799.6704750000001,
       "takeProfit": 1854.068575,
-      "trailingStop": 1795.1372999999999,
-      "highWaterMark": 1813.27,
+      "trailingStop": 1797.0381,
+      "highWaterMark": 1815.19,
       "signals": [
         "MACD",
         "MA Trend",
@@ -55,9 +37,56 @@
       ],
       "confluence": 3,
       "openedAt": 1783781770542
+    },
+    {
+      "id": "mrgjaumksx4p",
+      "symbol": "SOL",
+      "direction": "BUY",
+      "entryPrice": 78.34,
+      "quantity": 3.7163266066248877,
+      "value": 291.1370263629937,
+      "stopLoss": 77.75245000000001,
+      "takeProfit": 80.10265,
+      "trailingStop": 77.5566,
+      "highWaterMark": 78.34,
+      "signals": [
+        "EMA Cross",
+        "MACD"
+      ],
+      "confluence": 2,
+      "openedAt": 1783784610956
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "SOL",
+      "direction": "BUY",
+      "price": 78.34,
+      "quantity": 3.7163266066248877,
+      "value": 291.1370263629937,
+      "confluence": 2,
+      "signals": [
+        "EMA Cross",
+        "MACD"
+      ],
+      "timestamp": 1783784610956
+    },
+    {
+      "type": "CLOSE",
+      "symbol": "ADA",
+      "direction": "BUY",
+      "entryPrice": 0.16797,
+      "exitPrice": 0.17275,
+      "quantity": 1783.6494574777164,
+      "value": 299.59959937253205,
+      "pnl": 8.525844406743447,
+      "pnlPct": 2.845746264213835,
+      "reason": "take_profit",
+      "result": "WIN",
+      "duration": 23557942,
+      "timestamp": 1783784610456
+    },
     {
       "type": "OPEN",
       "symbol": "ETH",
@@ -2074,56 +2103,56 @@
     }
   ],
   "balance": {
-    "available": 9396.442101653847,
-    "total": 9988.847201250433
+    "available": 9413.430519070129,
+    "total": 9995.486873984015
   },
   "lastScan": {
-    "timestamp": 1783781770542,
+    "timestamp": 1783784610956,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 1,
-    "closedTrades": 0,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 68,
-    "wins": 24,
+    "totalTrades": 69,
+    "wins": 25,
     "losses": 44,
-    "winRate": "35.3",
-    "totalPnL": "-13.35",
-    "avgWin": "5.79",
+    "winRate": "36.2",
+    "totalPnL": "-4.82",
+    "avgWin": "5.90",
     "avgLoss": "3.46"
   },
   "prices": {
     "BTC": {
-      "price": 64404.69,
-      "change24h": 0.715,
-      "volume": 2373859.9694609
+      "price": 64148.91,
+      "change24h": 0.32,
+      "volume": 2574212.6365293
     },
     "ETH": {
-      "price": 1813.27,
-      "change24h": 1.467,
-      "volume": 599963.128379
+      "price": 1815.19,
+      "change24h": 1.436,
+      "volume": 841140.061231
     },
     "SOL": {
-      "price": 78.51,
-      "change24h": 0.589,
-      "volume": 245270.7915
+      "price": 78.34,
+      "change24h": 0.192,
+      "volume": 282642.10962
     },
     "BNB": {
-      "price": 581.34,
-      "change24h": 1.348,
-      "volume": 44223.49471
+      "price": 579.47,
+      "change24h": 1.041,
+      "volume": 45035.35891
     },
     "XRP": {
-      "price": 1.1132,
-      "change24h": 1.035,
-      "volume": 179646.44663
+      "price": 1.1111,
+      "change24h": 0.89,
+      "volume": 192716.65325
     },
     "ADA": {
-      "price": 0.1692,
-      "change24h": 1.934,
-      "volume": 18498.091005
+      "price": 0.17275,
+      "change24h": 4.06,
+      "volume": 31780.45672
     }
   }
 }
