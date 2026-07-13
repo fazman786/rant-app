@@ -28,8 +28,8 @@
       "value": 290.79405415494784,
       "stopLoss": 580.6827000000001,
       "takeProfit": 563.3919000000001,
-      "trailingStop": 574.1547,
-      "highWaterMark": 568.47,
+      "trailingStop": 570.1954999999999,
+      "highWaterMark": 564.55,
       "signals": [
         "MACD",
         "Volume"
@@ -46,8 +46,8 @@
       "value": 290.59601262059687,
       "stopLoss": 63170.884725,
       "takeProfit": 61289.865825,
-      "trailingStop": 63247.250400000004,
-      "highWaterMark": 62621.04,
+      "trailingStop": 62654.541999999994,
+      "highWaterMark": 62034.2,
       "signals": [
         "MACD",
         "MA Trend"
@@ -2250,10 +2250,10 @@
   ],
   "balance": {
     "available": 9395.937741399299,
-    "total": 9981.527569949596
+    "total": 9986.375047399832
   },
   "lastScan": {
-    "timestamp": 1783957621653,
+    "timestamp": 1783964574038,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -2271,34 +2271,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 62631.61,
-      "change24h": -2.4,
-      "volume": 5546066.0279838
+      "price": 62034.2,
+      "change24h": -3.323,
+      "volume": 6360368.4802574
     },
     "ETH": {
-      "price": 1776.44,
-      "change24h": -2.562,
-      "volume": 849571.960331
+      "price": 1768.01,
+      "change24h": -2.914,
+      "volume": 872155.71067
     },
     "SOL": {
-      "price": 75.84,
-      "change24h": -1.952,
-      "volume": 292469.38163
+      "price": 75.08,
+      "change24h": -3.21,
+      "volume": 219047.72666
     },
     "BNB": {
-      "price": 568.67,
-      "change24h": -2.095,
-      "volume": 38658.03398
+      "price": 564.55,
+      "change24h": -2.655,
+      "volume": 41945.86004
     },
     "XRP": {
-      "price": 1.0737,
-      "change24h": -2.48,
-      "volume": 640102.55249
+      "price": 1.064,
+      "change24h": -3.282,
+      "volume": 642906.77277
     },
     "ADA": {
-      "price": 0.15892,
-      "change24h": -3.357,
-      "volume": 57232.041684
+      "price": 0.15726,
+      "change24h": -4.197,
+      "volume": 60374.276895
     }
   }
 }
