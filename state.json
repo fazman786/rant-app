@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "mrmsyr2575d9",
-      "symbol": "SOL",
-      "direction": "SELL",
-      "entryPrice": 76.98,
-      "quantity": 3.777007006253127,
-      "value": 290.7539993413657,
-      "stopLoss": 77.55735000000001,
-      "takeProfit": 75.24795,
-      "trailingStop": 76.21459999999999,
-      "highWaterMark": 75.46,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "confluence": 2,
-      "openedAt": 1784163639677
-    },
-    {
       "id": "mrn9d5ye8ixf",
       "symbol": "BTC",
       "direction": "SELL",
@@ -46,17 +28,64 @@
       "value": 290.8784349867642,
       "stopLoss": 64821.5425,
       "takeProfit": 62891.372500000005,
-      "trailingStop": 64741,
-      "highWaterMark": 64100,
+      "trailingStop": 64427.9,
+      "highWaterMark": 63790,
       "signals": [
         "EMA Cross",
         "MACD"
       ],
       "confluence": 2,
       "openedAt": 1784191186022
+    },
+    {
+      "id": "mro5cle7nta6",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "entryPrice": 75.18,
+      "quantity": 3.8717565881316838,
+      "value": 291.07866029574,
+      "stopLoss": 75.74385000000001,
+      "takeProfit": 73.48845000000001,
+      "trailingStop": 75.93180000000001,
+      "highWaterMark": 75.18,
+      "signals": [
+        "MACD",
+        "MA Trend"
+      ],
+      "confluence": 2,
+      "openedAt": 1784244907087
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "price": 75.18,
+      "quantity": 3.8717565881316838,
+      "value": 291.07866029574,
+      "confluence": 2,
+      "signals": [
+        "MACD",
+        "MA Trend"
+      ],
+      "timestamp": 1784244907087
+    },
+    {
+      "type": "CLOSE",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "entryPrice": 76.98,
+      "exitPrice": 75.18,
+      "quantity": 3.777007006253127,
+      "value": 290.7539993413657,
+      "pnl": 6.798612611255618,
+      "pnlPct": 2.3382696804364733,
+      "reason": "take_profit",
+      "result": "WIN",
+      "duration": 81266881,
+      "timestamp": 1784244906558
+    },
     {
       "type": "OPEN",
       "symbol": "BTC",
@@ -2453,56 +2482,56 @@
     }
   ],
   "balance": {
-    "available": 9405.069397905378,
-    "total": 9992.492463040313
+    "available": 9411.54334956226,
+    "total": 9995.982489340448
   },
   "lastScan": {
-    "timestamp": 1784241657299,
+    "timestamp": 1784244907087,
     "scannedPairs": 6,
     "openPositions": 2,
-    "newTrades": 0,
-    "closedTrades": 0,
+    "newTrades": 1,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 81,
-    "wins": 28,
+    "totalTrades": 82,
+    "wins": 29,
     "losses": 53,
-    "winRate": "34.6",
-    "totalPnL": "-13.30",
-    "avgWin": "5.92",
+    "winRate": "35.4",
+    "totalPnL": "-6.50",
+    "avgWin": "5.95",
     "avgLoss": "3.38"
   },
   "prices": {
     "BTC": {
-      "price": 64127.53,
-      "change24h": -1.173,
-      "volume": 3750267.5211101
+      "price": 63790,
+      "change24h": -1.642,
+      "volume": 3975037.213194
     },
     "ETH": {
-      "price": 1872.23,
-      "change24h": -2.737,
-      "volume": 621517.688004
+      "price": 1861.72,
+      "change24h": -2.936,
+      "volume": 629067.041369
     },
     "SOL": {
-      "price": 75.7,
-      "change24h": -2.423,
-      "volume": 388128.00769
+      "price": 75.18,
+      "change24h": -2.856,
+      "volume": 387888.17955
     },
     "BNB": {
-      "price": 576.17,
-      "change24h": -0.828,
-      "volume": 35127.97044
+      "price": 572.04,
+      "change24h": -1.652,
+      "volume": 37080.99569
     },
     "XRP": {
-      "price": 1.0943,
-      "change24h": -2.146,
-      "volume": 236630.92908
+      "price": 1.0869,
+      "change24h": -2.45,
+      "volume": 225238.43451
     },
     "ADA": {
-      "price": 0.16169,
-      "change24h": -2.059,
-      "volume": 31785.986422
+      "price": 0.15997,
+      "change24h": -3.394,
+      "volume": 31167.754201
     }
   }
 }
