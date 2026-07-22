@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "mrtfak16z1ge",
-      "symbol": "BTC",
-      "direction": "BUY",
-      "entryPrice": 65591.2,
-      "quantity": 0.004436794459042751,
-      "value": 291.01467272196487,
-      "stopLoss": 65099.266,
-      "takeProfit": 67067.002,
-      "trailingStop": 66175.857,
-      "highWaterMark": 66844.3,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "confluence": 2,
-      "openedAt": 1784563939050
-    },
-    {
       "id": "mrvks8y1teti",
       "symbol": "BNB",
       "direction": "SELL",
@@ -46,17 +28,64 @@
       "value": 291.0858214159805,
       "stopLoss": 575.5041500000001,
       "takeProfit": 558.36755,
-      "trailingStop": 576.9322000000001,
-      "highWaterMark": 571.22,
+      "trailingStop": 574.791,
+      "highWaterMark": 569.1,
       "signals": [
         "EMA Cross",
         "MACD"
       ],
       "confluence": 2,
       "openedAt": 1784694094921
+    },
+    {
+      "id": "mrvpwozmq8qm",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "entryPrice": 77.25,
+      "quantity": 3.7687066231923745,
+      "value": 291.13258664161094,
+      "stopLoss": 77.829375,
+      "takeProfit": 75.511875,
+      "trailingStop": 78.0225,
+      "highWaterMark": 77.25,
+      "signals": [
+        "EMA Cross",
+        "MACD"
+      ],
+      "confluence": 2,
+      "openedAt": 1784702700418
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "SOL",
+      "direction": "SELL",
+      "price": 77.25,
+      "quantity": 3.7687066231923745,
+      "value": 291.13258664161094,
+      "confluence": 2,
+      "signals": [
+        "EMA Cross",
+        "MACD"
+      ],
+      "timestamp": 1784702700418
+    },
+    {
+      "type": "CLOSE",
+      "symbol": "BTC",
+      "direction": "BUY",
+      "entryPrice": 65591.2,
+      "exitPrice": 65958.58,
+      "quantity": 0.004436794459042751,
+      "value": 291.01467272196487,
+      "pnl": 1.6299895483631464,
+      "pnlPct": 0.5601056239251677,
+      "reason": "trailing_stop",
+      "result": "WIN",
+      "duration": 138760879,
+      "timestamp": 1784702699929
+    },
     {
       "type": "OPEN",
       "symbol": "BNB",
@@ -2773,56 +2802,56 @@
     }
   ],
   "balance": {
-    "available": 9411.774892450037,
-    "total": 9997.319359550926
+    "available": 9413.286968078755,
+    "total": 9996.585698851592
   },
   "lastScan": {
-    "timestamp": 1784694094921,
+    "timestamp": 1784702700419,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 1,
-    "closedTrades": 0,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 92,
-    "wins": 33,
+    "totalTrades": 93,
+    "wins": 34,
     "losses": 59,
-    "winRate": "35.9",
-    "totalPnL": "-6.12",
-    "avgWin": "5.72",
+    "winRate": "36.6",
+    "totalPnL": "-4.49",
+    "avgWin": "5.60",
     "avgLoss": "3.30"
   },
   "prices": {
     "BTC": {
-      "price": 66367.43,
-      "change24h": 1.094,
-      "volume": 3883303.5141324
+      "price": 65958.58,
+      "change24h": -0.009,
+      "volume": 3664164.8984964
     },
     "ETH": {
-      "price": 1935.2,
-      "change24h": 0.46,
-      "volume": 811586.681584
+      "price": 1918.11,
+      "change24h": -0.84,
+      "volume": 845095.544847
     },
     "SOL": {
-      "price": 78.12,
-      "change24h": -0.179,
-      "volume": 334351.5636
+      "price": 77.25,
+      "change24h": -1.768,
+      "volume": 545911.10158
     },
     "BNB": {
-      "price": 571.22,
-      "change24h": -0.564,
-      "volume": 75320.8208
+      "price": 569.1,
+      "change24h": -1.143,
+      "volume": 70187.755
     },
     "XRP": {
-      "price": 1.1404,
-      "change24h": 1.405,
-      "volume": 672365.90261
+      "price": 1.1326,
+      "change24h": -0.291,
+      "volume": 649833.31796
     },
     "ADA": {
-      "price": 0.17314,
-      "change24h": 1.033,
-      "volume": 38148.390927
+      "price": 0.17096,
+      "change24h": -3.012,
+      "volume": 25387.182566
     }
   }
 }
