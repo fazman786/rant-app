@@ -28,8 +28,8 @@
       "value": 289.37325581054375,
       "stopLoss": 566.89615,
       "takeProfit": 584.0315499999999,
-      "trailingStop": 568.4381999999999,
-      "highWaterMark": 574.18,
+      "trailingStop": 572.2793999999999,
+      "highWaterMark": 578.06,
       "signals": [
         "EMA Cross",
         "MACD"
@@ -46,8 +46,8 @@
       "value": 289.5569980923025,
       "stopLoss": 1897.888275,
       "takeProfit": 1955.255175,
-      "trailingStop": 1893.1077,
-      "highWaterMark": 1912.23,
+      "trailingStop": 1896.8301,
+      "highWaterMark": 1915.99,
       "signals": [
         "EMA Cross",
         "MACD"
@@ -2974,10 +2974,10 @@
   ],
   "balance": {
     "available": 9362.34293831778,
-    "total": 9941.06788921177
+    "total": 9945.32811566622
   },
   "lastScan": {
-    "timestamp": 1785392052437,
+    "timestamp": 1785401326451,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -2995,34 +2995,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 64008.7,
-      "change24h": -0.143,
-      "volume": 3494161.4674866
+      "price": 64330.64,
+      "change24h": -0.187,
+      "volume": 3117575.0068866
     },
     "ETH": {
-      "price": 1904.35,
-      "change24h": -0.416,
-      "volume": 898441.764643
+      "price": 1915.99,
+      "change24h": 0.001,
+      "volume": 848365.033331
     },
     "SOL": {
-      "price": 73.66,
-      "change24h": -0.027,
-      "volume": 237143.52419
+      "price": 73.68,
+      "change24h": -0.392,
+      "volume": 248823.41987
     },
     "BNB": {
-      "price": 573.13,
-      "change24h": 0.639,
-      "volume": 52690.42026
+      "price": 578.06,
+      "change24h": 1.132,
+      "volume": 54959.67685
     },
     "XRP": {
-      "price": 1.0765,
-      "change24h": -0.783,
-      "volume": 165377.84308
+      "price": 1.0787,
+      "change24h": -0.864,
+      "volume": 183357.96302
     },
     "ADA": {
-      "price": 0.16239,
-      "change24h": -0.794,
-      "volume": 23327.364088
+      "price": 0.16509,
+      "change24h": 0.298,
+      "volume": 23537.905681
     }
   }
 }
