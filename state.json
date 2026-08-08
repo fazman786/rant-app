@@ -28,8 +28,8 @@
       "value": 298.1625598337091,
       "stopLoss": 589.237325,
       "takeProfit": 607.048025,
-      "trailingStop": 587.7531,
-      "highWaterMark": 593.69,
+      "trailingStop": 588.8025,
+      "highWaterMark": 594.75,
       "signals": [
         "EMA Cross",
         "MACD"
@@ -46,8 +46,8 @@
       "value": 289.2176830386978,
       "stopLoss": 73.81222500000001,
       "takeProfit": 76.043325,
-      "trailingStop": 73.953,
-      "highWaterMark": 74.7,
+      "trailingStop": 74.05199999999999,
+      "highWaterMark": 74.8,
       "signals": [
         "MACD",
         "MA Trend"
@@ -2974,10 +2974,10 @@
   ],
   "balance": {
     "available": 9351.371751584564,
-    "total": 9939.155687546208
+    "total": 9940.956574984504
   },
   "lastScan": {
-    "timestamp": 1786168833431,
+    "timestamp": 1786172041731,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -2995,34 +2995,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 64989.25,
-      "change24h": 1.016,
-      "volume": 1813356.3719707
+      "price": 65008.03,
+      "change24h": 1.107,
+      "volume": 1818591.1001736
     },
     "ETH": {
-      "price": 1917.76,
-      "change24h": 0.816,
-      "volume": 388604.941087
+      "price": 1916.45,
+      "change24h": 0.691,
+      "volume": 368395.493325
     },
     "SOL": {
-      "price": 74.55,
-      "change24h": 2.277,
-      "volume": 179512.1905
+      "price": 74.8,
+      "change24h": 2.62,
+      "volume": 197480.02216
     },
     "BNB": {
-      "price": 593.1,
-      "change24h": 0.869,
-      "volume": 89650.2845
+      "price": 594.75,
+      "change24h": 1.35,
+      "volume": 95786.14109
     },
     "XRP": {
-      "price": 1.0328,
-      "change24h": 0.948,
-      "volume": 147970.43146
+      "price": 1.0354,
+      "change24h": 0.877,
+      "volume": 143596.21713
     },
     "ADA": {
-      "price": 0.20115,
-      "change24h": -0.278,
-      "volume": 40601.387421
+      "price": 0.19993,
+      "change24h": -0.853,
+      "volume": 36524.142958
     }
   }
 }
