@@ -20,24 +20,6 @@
   },
   "positions": [
     {
-      "id": "msl8k3tgroy5",
-      "symbol": "ETH",
-      "direction": "SELL",
-      "entryPrice": 1913.16,
-      "quantity": 0.15128020375394086,
-      "value": 289.4232346138895,
-      "stopLoss": 1927.5087,
-      "takeProfit": 1870.1139,
-      "trailingStop": 1932.2916,
-      "highWaterMark": 1913.16,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "confluence": 2,
-      "openedAt": 1786245680212
-    },
-    {
       "id": "msly1aoesd5f",
       "symbol": "BNB",
       "direction": "BUY",
@@ -57,6 +39,21 @@
     }
   ],
   "tradeLog": [
+    {
+      "type": "CLOSE",
+      "symbol": "ETH",
+      "direction": "SELL",
+      "entryPrice": 1913.16,
+      "exitPrice": 1929.67,
+      "quantity": 0.15128020375394086,
+      "value": 289.4232346138895,
+      "pnl": -2.497636163977562,
+      "pnlPct": -0.8629701645445227,
+      "reason": "stop_loss",
+      "result": "LOSS",
+      "duration": 68963633,
+      "timestamp": 1786314643845
+    },
     {
       "type": "OPEN",
       "symbol": "BNB",
@@ -2955,73 +2952,59 @@
         "MACD"
       ],
       "timestamp": 1783401277312
-    },
-    {
-      "type": "OPEN",
-      "symbol": "ETH",
-      "direction": "SELL",
-      "price": 1758.36,
-      "quantity": 0.17054477170525467,
-      "value": 299.87910477565157,
-      "confluence": 2,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "timestamp": 1783401277312
     }
   ],
   "balance": {
-    "available": 9364.410535830579,
-    "total": 9941.436107936377
+    "available": 9651.336134280491,
+    "total": 9940.714383559958
   },
   "lastScan": {
-    "timestamp": 1786312820859,
+    "timestamp": 1786314644118,
     "scannedPairs": 6,
-    "openPositions": 2,
+    "openPositions": 1,
     "newTrades": 0,
-    "closedTrades": 0,
+    "closedTrades": 1,
     "aiPowered": false
   },
   "stats": {
-    "totalTrades": 99,
+    "totalTrades": 100,
     "wins": 32,
-    "losses": 67,
-    "winRate": "32.3",
-    "totalPnL": "-52.52",
+    "losses": 68,
+    "winRate": "32.0",
+    "totalPnL": "-55.01",
     "avgWin": "4.94",
-    "avgLoss": "3.15"
+    "avgLoss": "3.14"
   },
   "prices": {
     "BTC": {
-      "price": 65215.19,
-      "change24h": 0.303,
-      "volume": 843013.5026108
+      "price": 65236.38,
+      "change24h": 0.376,
+      "volume": 884997.2270201
     },
     "ETH": {
-      "price": 1925.78,
-      "change24h": 0.293,
-      "volume": 217940.450934
+      "price": 1929.67,
+      "change24h": 0.502,
+      "volume": 283054.638819
     },
     "SOL": {
-      "price": 77.33,
-      "change24h": 1.443,
-      "volume": 261968.89848
+      "price": 77.44,
+      "change24h": 1.601,
+      "volume": 266910.61064
     },
     "BNB": {
-      "price": 608.38,
-      "change24h": 1.157,
-      "volume": 88805.1765
+      "price": 608.1,
+      "change24h": 1.235,
+      "volume": 78186.37315
     },
     "XRP": {
-      "price": 1.0432,
-      "change24h": 0.038,
-      "volume": 92547.51827
+      "price": 1.044,
+      "change24h": 0.317,
+      "volume": 98568.25687
     },
     "ADA": {
       "price": 0.19862,
-      "change24h": -0.486,
-      "volume": 26501.63783
+      "change24h": -0.331,
+      "volume": 26070.047223
     }
   }
 }
