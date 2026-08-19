@@ -28,8 +28,8 @@
       "value": 298.06783944187356,
       "stopLoss": 67421.5969,
       "takeProfit": 69459.5293,
-      "trailingStop": 67730.85,
-      "highWaterMark": 68415,
+      "trailingStop": 67921.0092,
+      "highWaterMark": 68607.08,
       "signals": [
         "EMA Cross",
         "MACD",
@@ -47,8 +47,8 @@
       "value": 289.12580425861734,
       "stopLoss": 2055.0605750000004,
       "takeProfit": 2117.178275,
-      "trailingStop": 2078.3268000000003,
-      "highWaterMark": 2099.32,
+      "trailingStop": 2094.0975,
+      "highWaterMark": 2115.25,
       "signals": [
         "EMA Cross",
         "MACD",
@@ -2981,10 +2981,10 @@
   ],
   "balance": {
     "available": 9348.40100436196,
-    "total": 9941.729690398843
+    "total": 9944.79687621187
   },
   "lastScan": {
-    "timestamp": 1787169073765,
+    "timestamp": 1787170131740,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -3002,34 +3002,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 68415,
-      "change24h": 5.767,
-      "volume": 6122830.9224008
+      "price": 68607.08,
+      "change24h": 6.158,
+      "volume": 6223403.9346828
     },
     "ETH": {
-      "price": 2099.32,
-      "change24h": 9.626,
-      "volume": 2261652.38706
+      "price": 2115.25,
+      "change24h": 10.554,
+      "volume": 2301320.348296
     },
     "SOL": {
-      "price": 82.25,
-      "change24h": 6.583,
-      "volume": 586405.16376
+      "price": 82.3,
+      "change24h": 6.661,
+      "volume": 586842.92663
     },
     "BNB": {
-      "price": 615.56,
-      "change24h": 2.063,
-      "volume": 117586.54365
+      "price": 616.69,
+      "change24h": 2.267,
+      "volume": 118114.56541
     },
     "XRP": {
-      "price": 1.0667,
-      "change24h": 6.404,
-      "volume": 425862.80573
+      "price": 1.069,
+      "change24h": 6.644,
+      "volume": 422937.16204
     },
     "ADA": {
-      "price": 0.18084,
-      "change24h": 4.189,
-      "volume": 54133.041398
+      "price": 0.18148,
+      "change24h": 4.793,
+      "volume": 54044.892061
     }
   }
 }
