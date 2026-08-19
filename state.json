@@ -28,8 +28,8 @@
       "value": 298.06783944187356,
       "stopLoss": 67421.5969,
       "takeProfit": 69459.5293,
-      "trailingStop": 67721.32620000001,
-      "highWaterMark": 68405.38,
+      "trailingStop": 67730.85,
+      "highWaterMark": 68415,
       "signals": [
         "EMA Cross",
         "MACD",
@@ -47,8 +47,8 @@
       "value": 289.12580425861734,
       "stopLoss": 2055.0605750000004,
       "takeProfit": 2117.178275,
-      "trailingStop": 2073.2778,
-      "highWaterMark": 2094.22,
+      "trailingStop": 2078.3268000000003,
+      "highWaterMark": 2099.32,
       "signals": [
         "EMA Cross",
         "MACD",
@@ -2981,10 +2981,10 @@
   ],
   "balance": {
     "available": 9348.40100436196,
-    "total": 9940.06557783864
+    "total": 9941.729690398843
   },
   "lastScan": {
-    "timestamp": 1787167941576,
+    "timestamp": 1787169073765,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -3002,34 +3002,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 68198.04,
-      "change24h": 5.275,
-      "volume": 6125369.2143872
+      "price": 68415,
+      "change24h": 5.767,
+      "volume": 6122830.9224008
     },
     "ETH": {
-      "price": 2094.22,
-      "change24h": 9.245,
-      "volume": 2190294.214251
+      "price": 2099.32,
+      "change24h": 9.626,
+      "volume": 2261652.38706
     },
     "SOL": {
-      "price": 82.22,
-      "change24h": 6.269,
-      "volume": 585893.48208
+      "price": 82.25,
+      "change24h": 6.583,
+      "volume": 586405.16376
     },
     "BNB": {
-      "price": 615.51,
-      "change24h": 1.983,
-      "volume": 117191.21379
+      "price": 615.56,
+      "change24h": 2.063,
+      "volume": 117586.54365
     },
     "XRP": {
       "price": 1.0667,
-      "change24h": 6.372,
-      "volume": 423246.39166
+      "change24h": 6.404,
+      "volume": 425862.80573
     },
     "ADA": {
       "price": 0.18084,
-      "change24h": 3.657,
-      "volume": 54991.409201
+      "change24h": 4.189,
+      "volume": 54133.041398
     }
   }
 }
