@@ -28,8 +28,8 @@
       "value": 290.7812481835666,
       "stopLoss": 645.5815500000001,
       "takeProfit": 665.09535,
-      "trailingStop": 648.1728,
-      "highWaterMark": 654.72,
+      "trailingStop": 649.9449,
+      "highWaterMark": 656.51,
       "signals": [
         "EMA Cross",
         "MACD",
@@ -47,8 +47,8 @@
       "value": 291.04797644111375,
       "stopLoss": 72073.9208,
       "takeProfit": 74252.4776,
-      "trailingStop": 72221.5989,
-      "highWaterMark": 72951.11,
+      "trailingStop": 72258.5358,
+      "highWaterMark": 72988.42,
       "signals": [
         "EMA Cross",
         "MA Trend"
@@ -2986,10 +2986,10 @@
   ],
   "balance": {
     "available": 9410.551238262678,
-    "total": 9994.533743971757
+    "total": 9996.56741340564
   },
   "lastScan": {
-    "timestamp": 1787266695558,
+    "timestamp": 1787268021236,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -3007,34 +3007,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 72692.93,
-      "change24h": 4.933,
-      "volume": 7207865.9386709
+      "price": 72988.42,
+      "change24h": 5.24,
+      "volume": 7438443.8542131
     },
     "ETH": {
-      "price": 2313.83,
-      "change24h": 2.86,
-      "volume": 3326411.572293
+      "price": 2326.65,
+      "change24h": 3.46,
+      "volume": 3316218.037414
     },
     "SOL": {
-      "price": 87.43,
-      "change24h": 2.329,
-      "volume": 947486.32406
+      "price": 87.56,
+      "change24h": 2.529,
+      "volume": 951467.66542
     },
     "BNB": {
-      "price": 654.61,
-      "change24h": 4.237,
-      "volume": 249483.3442
+      "price": 656.51,
+      "change24h": 4.753,
+      "volume": 246959.63645
     },
     "XRP": {
-      "price": 1.2592,
-      "change24h": 14.006,
-      "volume": 3655147.78349
+      "price": 1.2622,
+      "change24h": 14.652,
+      "volume": 3566075.06001
     },
     "ADA": {
       "price": 0.19617,
-      "change24h": 4.213,
-      "volume": 136683.990651
+      "change24h": 5.022,
+      "volume": 135843.030637
     }
   }
 }
