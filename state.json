@@ -36,9 +36,41 @@
       ],
       "confluence": 2,
       "openedAt": 1787376522231
+    },
+    {
+      "id": "mt411dlu3r0l",
+      "symbol": "XRP",
+      "direction": "BUY",
+      "entryPrice": 1.5703,
+      "quantity": 185.31797307017789,
+      "value": 291.00481311210035,
+      "stopLoss": 1.55852275,
+      "takeProfit": 1.60563175,
+      "trailingStop": 1.554597,
+      "highWaterMark": 1.5703,
+      "signals": [
+        "EMA Cross",
+        "MA Trend"
+      ],
+      "confluence": 2,
+      "openedAt": 1787381906466
     }
   ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "XRP",
+      "direction": "BUY",
+      "price": 1.5703,
+      "quantity": 185.31797307017789,
+      "value": 291.00481311210035,
+      "confluence": 2,
+      "signals": [
+        "EMA Cross",
+        "MA Trend"
+      ],
+      "timestamp": 1787381906466
+    },
     {
       "type": "OPEN",
       "symbol": "ETH",
@@ -2954,32 +2986,17 @@
       "result": "WIN",
       "duration": 9411915,
       "timestamp": 1785651616375
-    },
-    {
-      "type": "OPEN",
-      "symbol": "ADA",
-      "direction": "BUY",
-      "price": 0.18052,
-      "quantity": 1603.990978367434,
-      "value": 289.5524514148892,
-      "confluence": 3,
-      "signals": [
-        "EMA Cross",
-        "MACD",
-        "MA Trend"
-      ],
-      "timestamp": 1785642204460
     }
   ],
   "balance": {
-    "available": 9700.160437070012,
-    "total": 10001.227086978972
+    "available": 9409.155623957911,
+    "total": 10000.460654087661
   },
   "lastScan": {
-    "timestamp": 1787379233458,
+    "timestamp": 1787381906467,
     "scannedPairs": 6,
-    "openPositions": 1,
-    "newTrades": 0,
+    "openPositions": 2,
+    "newTrades": 1,
     "closedTrades": 0,
     "aiPowered": false
   },
@@ -2994,34 +3011,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 77257.28,
-      "change24h": 2.615,
-      "volume": 13322011.4207702
+      "price": 77461.98,
+      "change24h": 2.424,
+      "volume": 13217381.1126143
     },
     "ETH": {
-      "price": 2429.98,
-      "change24h": 2.759,
-      "volume": 4784541.949854
+      "price": 2436.21,
+      "change24h": 2.737,
+      "volume": 4609406.274887
     },
     "SOL": {
-      "price": 93.83,
-      "change24h": 3.303,
-      "volume": 2387843.6958
+      "price": 94.31,
+      "change24h": 4.615,
+      "volume": 2374724.12728
     },
     "BNB": {
-      "price": 694.91,
-      "change24h": 4.424,
-      "volume": 329073.74901
+      "price": 699.84,
+      "change24h": 4.676,
+      "volume": 328970.4287
     },
     "XRP": {
-      "price": 1.5277,
-      "change24h": 16.423,
-      "volume": 6208053.4858
+      "price": 1.5703,
+      "change24h": 20.857,
+      "volume": 6483031.55804
     },
     "ADA": {
-      "price": 0.2307,
-      "change24h": 10.088,
-      "volume": 465165.525492
+      "price": 0.23366,
+      "change24h": 12.705,
+      "volume": 468728.394538
     }
   }
 }
