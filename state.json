@@ -18,8 +18,77 @@
     "trailingStopPct": 1,
     "confluenceRequired": 2
   },
-  "positions": [],
+  "positions": [
+    {
+      "id": "mtjx446e3tdj",
+      "symbol": "BTC",
+      "direction": "SELL",
+      "entryPrice": 76664.77,
+      "quantity": 0.0038947821500931825,
+      "value": 298.5925777369993,
+      "stopLoss": 77239.75577500001,
+      "takeProfit": 74939.81267500001,
+      "trailingStop": 77431.4177,
+      "highWaterMark": 76664.77,
+      "signals": [
+        "MACD",
+        "MA Trend",
+        "Volume"
+      ],
+      "confluence": 3,
+      "openedAt": 1788342774566
+    },
+    {
+      "id": "mtjx446fyg9d",
+      "symbol": "ETH",
+      "direction": "SELL",
+      "entryPrice": 2374.98,
+      "quantity": 0.1219525218759271,
+      "value": 289.63480040488935,
+      "stopLoss": 2392.79235,
+      "takeProfit": 2321.54295,
+      "trailingStop": 2398.7298,
+      "highWaterMark": 2374.98,
+      "signals": [
+        "MACD",
+        "MA Trend",
+        "Volume"
+      ],
+      "confluence": 3,
+      "openedAt": 1788342774567
+    }
+  ],
   "tradeLog": [
+    {
+      "type": "OPEN",
+      "symbol": "ETH",
+      "direction": "SELL",
+      "price": 2374.98,
+      "quantity": 0.1219525218759271,
+      "value": 289.63480040488935,
+      "confluence": 3,
+      "signals": [
+        "MACD",
+        "MA Trend",
+        "Volume"
+      ],
+      "timestamp": 1788342774567
+    },
+    {
+      "type": "OPEN",
+      "symbol": "BTC",
+      "direction": "SELL",
+      "price": 76664.77,
+      "quantity": 0.0038947821500931825,
+      "value": 298.5925777369993,
+      "confluence": 3,
+      "signals": [
+        "MACD",
+        "MA Trend",
+        "Volume"
+      ],
+      "timestamp": 1788342774566
+    },
     {
       "type": "CLOSE",
       "symbol": "BTC",
@@ -2927,47 +2996,18 @@
       "result": "LOSS",
       "duration": 18539804,
       "timestamp": 1786916778850
-    },
-    {
-      "type": "OPEN",
-      "symbol": "ETH",
-      "direction": "BUY",
-      "price": 1891.06,
-      "quantity": 0.15238255342132453,
-      "value": 288.16455147293,
-      "confluence": 3,
-      "signals": [
-        "EMA Cross",
-        "MACD",
-        "Volume"
-      ],
-      "timestamp": 1786898239046
-    },
-    {
-      "type": "OPEN",
-      "symbol": "BTC",
-      "direction": "BUY",
-      "price": 63331.68,
-      "quantity": 0.004690809673588125,
-      "value": 297.0768571885876,
-      "confluence": 2,
-      "signals": [
-        "EMA Cross",
-        "MACD"
-      ],
-      "timestamp": 1786898239046
     }
   ],
   "balance": {
-    "available": 9953.085924566645,
+    "available": 9364.858546424757,
     "total": 9953.085924566645
   },
   "lastScan": {
-    "timestamp": 1788327610795,
+    "timestamp": 1788342774567,
     "scannedPairs": 6,
-    "openPositions": 0,
-    "newTrades": 0,
-    "closedTrades": 1,
+    "openPositions": 2,
+    "newTrades": 2,
+    "closedTrades": 0,
     "aiPowered": false
   },
   "stats": {
@@ -2981,34 +3021,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 77708.82,
-      "change24h": -1.723,
-      "volume": 2601961.6714465
+      "price": 76664.77,
+      "change24h": -1.638,
+      "volume": 3029604.5795393
     },
     "ETH": {
-      "price": 2420.89,
-      "change24h": -2.397,
-      "volume": 1340228.676784
+      "price": 2374.98,
+      "change24h": -3.181,
+      "volume": 1469871.268499
     },
     "SOL": {
-      "price": 100.15,
-      "change24h": -3.748,
-      "volume": 1004084.91652
+      "price": 98.74,
+      "change24h": -3.187,
+      "volume": 935494.29296
     },
     "BNB": {
-      "price": 689.26,
-      "change24h": -0.621,
-      "volume": 53271.90833
+      "price": 683.37,
+      "change24h": -0.399,
+      "volume": 62059.11694
     },
     "XRP": {
-      "price": 1.3509,
-      "change24h": -2.841,
-      "volume": 1608650.83173
+      "price": 1.3271,
+      "change24h": -2.848,
+      "volume": 1646180.33618
     },
     "ADA": {
-      "price": 0.1987,
-      "change24h": -1.765,
-      "volume": 46920.058442
+      "price": 0.19393,
+      "change24h": -2.001,
+      "volume": 47987.209303
     }
   }
 }
