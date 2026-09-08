@@ -28,8 +28,8 @@
       "value": 299.43879139046464,
       "stopLoss": 80231.72852500001,
       "takeProfit": 77842.69442500001,
-      "trailingStop": 79628.46059999999,
-      "highWaterMark": 78840.06,
+      "trailingStop": 79618.81509999999,
+      "highWaterMark": 78830.51,
       "signals": [
         "MACD",
         "Volume"
@@ -2995,10 +2995,10 @@
   ],
   "balance": {
     "available": 9390.752935818344,
-    "total": 9982.715923695061
+    "total": 9984.016129481017
   },
   "lastScan": {
-    "timestamp": 1788826487383,
+    "timestamp": 1788842113484,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -3016,34 +3016,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 79015.33,
-      "change24h": -1.635,
-      "volume": 5061299.9526453
+      "price": 78830.51,
+      "change24h": -0.949,
+      "volume": 4415573.5055303
     },
     "ETH": {
-      "price": 2487.72,
-      "change24h": -1.067,
-      "volume": 791636.865076
+      "price": 2482.54,
+      "change24h": -0.482,
+      "volume": 797878.623356
     },
     "SOL": {
-      "price": 103.69,
-      "change24h": -2.666,
-      "volume": 881031.91704
+      "price": 103.38,
+      "change24h": -1.562,
+      "volume": 842645.89947
     },
     "BNB": {
-      "price": 739.36,
-      "change24h": -1.698,
-      "volume": 140389.81772
+      "price": 744.83,
+      "change24h": -0.16,
+      "volume": 120819.97887
     },
     "XRP": {
-      "price": 1.3969,
-      "change24h": -1.862,
-      "volume": 1338479.44668
+      "price": 1.3949,
+      "change24h": -0.74,
+      "volume": 1274741.92521
     },
     "ADA": {
-      "price": 0.22055,
-      "change24h": -1.681,
-      "volume": 63337.296995
+      "price": 0.2184,
+      "change24h": 0,
+      "volume": 51799.449762
     }
   }
 }
