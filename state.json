@@ -28,8 +28,8 @@
       "value": 298.5556899821147,
       "stopLoss": 83496.78415,
       "takeProfit": 81010.52755,
-      "trailingStop": 82820,
-      "highWaterMark": 82000,
+      "trailingStop": 82700.50690000001,
+      "highWaterMark": 81881.69,
       "signals": [
         "EMA Cross",
         "MACD"
@@ -46,8 +46,8 @@
       "value": 289.5990192826513,
       "stopLoss": 744.84475,
       "takeProfit": 722.66575,
-      "trailingStop": 741.8652,
-      "highWaterMark": 734.52,
+      "trailingStop": 741.6329,
+      "highWaterMark": 734.29,
       "signals": [
         "EMA Cross",
         "MACD"
@@ -2970,10 +2970,10 @@
   ],
   "balance": {
     "available": 9363.70162347239,
-    "total": 9956.881712939212
+    "total": 9957.39801717667
   },
   "lastScan": {
-    "timestamp": 1792663371507,
+    "timestamp": 1792681202862,
     "scannedPairs": 6,
     "openPositions": 2,
     "newTrades": 0,
@@ -2991,34 +2991,34 @@
   },
   "prices": {
     "BTC": {
-      "price": 82000,
-      "change24h": -1.697,
-      "volume": 5010242.115806
+      "price": 81881.69,
+      "change24h": -3.244,
+      "volume": 3169118.863959
     },
     "ETH": {
-      "price": 2411.27,
-      "change24h": -1.759,
-      "volume": 1777335.079347
+      "price": 2414.03,
+      "change24h": -3.392,
+      "volume": 1906954.053782
     },
     "SOL": {
-      "price": 104.44,
-      "change24h": -1.842,
-      "volume": 537783.05553
+      "price": 104.73,
+      "change24h": -2.839,
+      "volume": 564376.15079
     },
     "BNB": {
-      "price": 734.52,
-      "change24h": -1.506,
-      "volume": 42535.23437
+      "price": 734.29,
+      "change24h": -1.863,
+      "volume": 39925.9095
     },
     "XRP": {
-      "price": 1.3318,
-      "change24h": -1.792,
-      "volume": 806265.10384
+      "price": 1.3243,
+      "change24h": -4.314,
+      "volume": 691460.33499
     },
     "ADA": {
-      "price": 0.21655,
-      "change24h": -3.326,
-      "volume": 98470.478396
+      "price": 0.21669,
+      "change24h": -4.827,
+      "volume": 98919.584663
     }
   }
 }
